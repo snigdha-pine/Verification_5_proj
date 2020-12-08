@@ -14,7 +14,7 @@ int seats;
 };
 
 struct ticket{
-int uniq_id;
+long long uniq_id;
 char seat_cate[10];
 int no_tickets;
 int total_pr;
@@ -43,8 +43,6 @@ void user();
 void book_ticket();
 void cancel_ticket();
 void show_movies();
-void tickets_no(int );
-void lastinsert(int );
 
 /***************************  MAIN  ***********************************/
 int main(){
@@ -200,7 +198,7 @@ void add_movie()
                goto lcs;
     }
     lcd:
-    printf("\n\t\t\tSelect Language:\n\t\t\t\t1. 2D\n\t\t\t\t2. 3D: ");
+    printf("\n\t\t\tSelect Dimension:\n\t\t\t\t1. 2D\n\t\t\t\t2. 3D: ");
     scanf("%d",&dc);
     switch(dc)
     { case 1: strcpy(mv.dim,"2D");
@@ -336,7 +334,8 @@ void show_movie(){
 }
 
 void edit_movie(){
-int fn=0;
+ int fn=0;
+ int lc,dc,tc,ch;
  char mv_name[20];
     detail:
     system("cls");
@@ -360,10 +359,75 @@ int fn=0;
     fscanf(fp,"%s %s %s %d %d %d\n",mv.categ,mv.dim,mv.timing,&mv.price_g,&mv.price_s,&mv.seats);
         if ((strcmp(mv.movie_name, mv_name) == 0)) {
 			fn=1;
+			printf("\n\t\t\tEnter which of the following details you want to update");
+			printf("\n\t\t\t1. Movie Name\n\t\t\t2. Language\n\t\t\t3. Dimension\n\t\t\t4. Timing\n\t\t\t5. Pricing\n\t\t\t6. Seats\n\t\t\t");
+			scanf("%d",&ch);
+			switch(ch)
+			{
+			    case 1: printf("\n\t\t\tEnter Name:");
+                        fflush(stdin);
+                        scanf("%[^\n]*s",mv.movie_name);
+                        strcat(mv.movie_name,"\n");
+                        break;
+                case 2: lcs:
+                        printf("\n\t\t\tSelect Language:\n\t\t\t\t1. Hindi\n\t\t\t\t2. English: ");
+                        scanf("%d",&lc);
+                         switch(lc)
+                        { case 1: strcpy(mv.categ,"Hindi");
+                           break;
+                          case 2: strcpy(mv.categ,"English");
+                           break;
+                         default: printf("Wrong Choice Entered...Enter again");
+                          goto lcs;
+                        }
+                        break;
+                case 3: lcd:
+                        printf("\n\t\t\tSelect Dimensions:\n\t\t\t\t1. 2D\n\t\t\t\t2. 3D: ");
+                        scanf("%d",&dc);
+                         switch(dc)
+                       { case 1: strcpy(mv.dim,"2D");
+                           break;
+                         case 2: strcpy(mv.dim,"3D");
+                           break;
+                         default: printf("Wrong Choice Entered...Enter again");
+                          goto lcd;
+                       }
+                        break;
+                case 4:  tcd:
+                         printf("\n\t\t\tTimings:\n\t\t\t\t1. 9am-12pm\n\t\t\t\t2. 12pm-3pm\n\t\t\t\t3. 3pm-6pm\n\t\t\t\t4. 6pm-9pm\n\t\t\t\t5. 9pm-12am:");
+                         scanf("%d",&tc);
+                         switch(tc)
+                          { case 1: strcpy(mv.timing,"9am-12pm");
+                              break;
+                            case 2: strcpy(mv.timing,"12pm-3pm");
+                              break;
+                            case 3: strcpy(mv.timing,"3pm-6pm");
+                              break;
+                            case 4: strcpy(mv.timing,"6pm-9pm");
+                              break;
+                            case 5: strcpy(mv.timing,"9pm-12am");
+                              break;
+                            default: printf("Wrong Choice Entered...Enter again");
+                             goto tcd;
+                          }
+                          break;
+                case 5: printf("\n\t\t\tPricing:\n\t\t\t\tGold:");
+                        scanf("%d",&mv.price_g);
+                        printf("\n\t\t\t\tSilver:");
+                        scanf("%d",&mv.price_s);
+                        break;
+                case 6: printf("\n\t\t\t\tSeats:");
+                        scanf("%d",&mv.seats);
+                        break;
+                default: printf("\n\t\t\tWrong Choice Entered");
+                         Sleep(600);
+                         admin();
+			}
+			fprintf(tmpFp,"%s%s %s %s %d %d %d\n",mv.movie_name,mv.categ,mv.dim,mv.timing,mv.price_g,mv.price_s,mv.seats);
 			continue;
 		}
 			fprintf(tmpFp,"%s%s %s %s %d %d %d\n",mv.movie_name,mv.categ,mv.dim,mv.timing,mv.price_g,mv.price_s,mv.seats);
-		}
+   }
 	fclose(fp);
 	fclose(tmpFp);
 	remove("Movie.txt");
@@ -371,71 +435,14 @@ int fn=0;
 
 	if (fn==0) {
 		printf("\n\n\t\tNo record found with the requested name: %s", mv_name);
+		Sleep(600);
 		goto detail;
 	}
-	else
-    {   system("cls");
-        printf("\n\n\n\tEnter New details to update in file");
-        int lc,dc,tc;
-        fp=fopen("Movie.txt","a");
-        printf("\n\t\t\tEnter Name:");
-        fflush(stdin);
-        scanf("%[^\n]*s",mv.movie_name);
-        strcat(mv.movie_name,"\n");
-
-        lcs:
-        printf("\n\t\t\tSelect Language:\n\t\t\t\t1. Hindi\n\t\t\t\t2. English: ");
-        scanf("%d",&lc);
-        switch(lc)
-            { case 1: strcpy(mv.categ,"Hindi");
-                break;
-              case 2: strcpy(mv.categ,"English");
-                break;
-              default: printf("Wrong Choice Entered...Enter again");
-               goto lcs;
-            }
-        lcd:
-        printf("\n\t\t\tSelect Dimensions:\n\t\t\t\t1. 2D\n\t\t\t\t2. 3D: ");
-        scanf("%d",&dc);
-        switch(dc)
-            { case 1: strcpy(mv.dim,"2D");
-                break;
-              case 2: strcpy(mv.dim,"3D");
-                break;
-              default: printf("Wrong Choice Entered...Enter again");
-                goto lcd;
-            }
-        tcd:
-        printf("\n\t\t\tTimings:\n\t\t\t\t1. 9am-12pm\n\t\t\t\t2. 12pm-3pm\n\t\t\t\t3. 3pm-6pm\n\t\t\t\t4. 6pm-9pm\n\t\t\t\t5. 9pm-12am:");
-        scanf("%d",&tc);
-        switch(tc)
-            { case 1: strcpy(mv.timing,"9am-12pm");
-                break;
-              case 2: strcpy(mv.timing,"12pm-3pm");
-                break;
-              case 3: strcpy(mv.timing,"3pm-6pm");
-                break;
-              case 4: strcpy(mv.timing,"6pm-9pm");
-                break;
-              case 5: strcpy(mv.timing,"9pm-12am");
-                break;
-              default: printf("Wrong Choice Entered...Enter again");
-               goto tcd;
-            }
-        printf("\n\t\t\tPricing:\n\t\t\t\tGold:");
-        scanf("%d",&mv.price_g);
-        printf("\n\t\t\t\tSilver:");
-        scanf("%d",&mv.price_s);
-        printf("\n\t\t\t\tSeats:");
-        scanf("%d",&mv.seats);
-        fprintf(fp,"%s%s %s %s %d %d %d\n",mv.movie_name,mv.categ,mv.dim,mv.timing,mv.price_g,mv.price_s,mv.seats);
-        fclose(fp);
         printf("\n\t\t\tDetails Updated successfully");
         Sleep(600);
         admin();
-    }
-
 }
+
 
 /***************************  USER  ***********************************/
  void user(){
@@ -525,6 +532,9 @@ void book_ticket(){
             if(mv.seats<0)
             {
                 printf("\n\t\t\tAudi Full");
+                fclose(fp);
+                fclose(tmpFp);
+                remove("Tmp.txt");
                 Sleep(600);
                 user();
             }
@@ -540,6 +550,7 @@ void book_ticket(){
         fclose(tmpFp);
         remove("Movie.txt");
         rename("Tmp.txt","Movie.txt");
+
         if (fn==0)
         {
             printf("\n\t\t\t\tMovie Not Found");
@@ -547,9 +558,10 @@ void book_ticket(){
             user();
         }
     tk.total_pr= (pr*tk.no_tickets);
-    printf("\n\t\t\tEnter Unique ID:");
-    scanf("%d",&tk.uniq_id);
-    fprintf(tp,"%s%d %s %s %d %d\n",tk.movie,tk.uniq_id,tk.seat_cate,tk.time,tk.total_pr,tk.no_tickets);
+    printf("\n\t\t\tPhone No. will be Ticket Unique ID");
+    printf("\n\t\t\tEnter Phone No.:");
+    scanf("%lld",&tk.uniq_id);
+    fprintf(tp,"%s%lld %s %s %d %d\n",tk.movie,tk.uniq_id,tk.seat_cate,tk.time,tk.total_pr,tk.no_tickets);
     fclose(tp);
     printf("\n\t\t\tTicket Booked Successfully!!!");
     Sleep(600);
@@ -593,7 +605,7 @@ void show_movies(){
 
 void cancel_ticket(){
     int fn=0,fn1=0,tick;
-    int tid;
+    long long tid;
     char mname[20];
     system("cls");
     printf("\n\t\t\t************************************************************");
@@ -603,18 +615,18 @@ void cancel_ticket(){
     tp = fopen("Booked.txt","r");
     tmpFp1 = fopen("Temp.txt","w");
     printf("\n\t\t\tEnter Ticket ID:");
-    scanf("%d",&tid);
+    scanf("%lld",&tid);
     fflush(stdin);
     while(fgets(tk.movie,20,tp)!= NULL)
     {
-       fscanf(tp,"%d %s %s %d %d\n",&tk.uniq_id,tk.seat_cate,tk.time,&tk.total_pr,&tk.no_tickets);
+       fscanf(tp,"%lld %s %s %d %d\n",&tk.uniq_id,tk.seat_cate,tk.time,&tk.total_pr,&tk.no_tickets);
             if(tk.uniq_id==tid){
             fn=1;
             strcpy(mname,tk.movie);
             tick=tk.no_tickets;
             continue;
            }
-     fprintf(tmpFp1,"%s%d %s %s %d %d\n",tk.movie,tk.uniq_id,tk.seat_cate,tk.time,tk.total_pr,tk.no_tickets);
+     fprintf(tmpFp1,"%s%lld %s %s %d %d\n",tk.movie,tk.uniq_id,tk.seat_cate,tk.time,tk.total_pr,tk.no_tickets);
     }
     fclose(tp);
     fclose(tmpFp1);
@@ -650,50 +662,3 @@ void cancel_ticket(){
     user();
     }
 }
-
-
-/*void tickets_no(int n)
-{  int item,i;
-    for(i=0;i<n;i++)
-        {
-            scanf("%d",&item);
-            lastinsert(item);
-        }
-}
-
-void lastinsert(int item)
-{      lp=fopen("Seats.txt","r+w");
-        struct node *ptr = (struct node*)malloc(sizeof(struct node));
-        struct node *temp;
-        if(ptr == NULL)
-        {
-            printf("\nUNDERFLOW");
-        }
-        else
-        {
-            ptr->data = item;
-            while(fscanf(lp,"%d ",ptr->data)!=NULL){
-                if(ptr->data==item){
-                    printf("\n\t\t\tEnter again");
-                    continue;
-                }
-                 fprintf(lp,"%d ",item);
-            }
-           fclose(lp);
-            if(head == NULL)
-            {
-                ptr -> next = NULL;
-                head = ptr;
-            }
-            else
-            {
-                temp = head;
-                while (temp -> next != NULL)
-                {
-                    temp = temp -> next;
-                }
-                temp->next = ptr;
-                ptr->next = NULL;
-            }
-        }
-}*/
