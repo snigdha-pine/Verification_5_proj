@@ -63,17 +63,42 @@ void add_movie()
 {
     system("cls");
     printf("\n\t\t\tMOVIE TICKET BOOKING");
-    int temp;
-    char file_name[55];
+    int temp,i=1,flag;
+    char file_name[55],temp_naam[55],mov_name[55];
     FILE *fptr;
+    while(i)
+    {
+        fptr = fopen("movie.txt","r");
     printf("\n\n\tEnter Movie Name - ");
     fflush(stdin);
     gets(mov.name);
+    strcpy(temp_naam,mov.name);
+    strcat(temp_naam,"\n");
+    flag = 0;
+    while(fgets(mov_name,55,fptr)!= NULL)
+    {
+        if(strcmp(mov_name,temp_naam) == 0)
+        {
+            printf("\n\n\t\tMovie Name Already Present!!!\n");
+            flag =1;
+        }
+        if(flag)
+        {
+            printf("\n\tPress 1 to Enter again\n\tPress 0 exit\n\n\tEnter your choise - ");
+            scanf("%d",&i);
+            if(i == 0)
+                admin();
+        }
+        else
+            i =0;
+    }
+    fclose(fptr);
+    }
+
     strcpy(file_name,mov.name);
     strcat(file_name,".txt");
     fptr = fopen(file_name,"a+");
     fputs(mov.name,fptr);
-
     printf("\n\tSelect Language\n\t\tpress 0 for English\n\t\tpress 1 for Hindi\n\n\t\tEnter your choice - ");
     scanf("%d",&temp);
     if(temp)
@@ -123,7 +148,6 @@ void show_movie()
             printf("\t");
         puts(mov_name);
     }
-
     fclose(fptr);
         printf("\n\tPress 1 for Detailed list\n\tPress 0 exit\n\n\tEnter option - ");
         scanf("%d",&op);
@@ -467,9 +491,10 @@ void password()
     printf("\n\t\t\tMOVIE TICKET BOOKING");
     char p[9],temp[9];
     int i,flag = 1;
-    FILE *fptr;
-    fptr = fopen("pass.txt","r");
-    fgets(temp,9,fptr);
+    //FILE *fptr;
+    //fptr = fopen("pass.txt","r");
+    //fgets(temp,9,fptr);
+    strcpy(temp,"hell-007");
     while(flag)
     {
     printf("\n\n\tEnter Password - ");
@@ -493,7 +518,7 @@ void password()
         if(flag == 4)
             main();
     }
-    fclose(fptr);
+   // fclose(fptr);
     }
 }
 
