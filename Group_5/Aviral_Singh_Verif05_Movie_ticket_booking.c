@@ -165,7 +165,6 @@ void add_movie()
     printf("\n\t\t\t********* WELCOME TO MOVIE TICKET BOOKING SYSTEM ***********");
     printf("\n\t\t\t************************************************************");
     printf("\n\t\t\t********************** ADD MOVIE PANEL *********************");
-    aao:
     printf("\n\t\t\tEnter Name:");
     fflush(stdin);
     scanf("%[^\n]*s",mv_name);
@@ -183,7 +182,8 @@ void add_movie()
     fclose(fp);
     if(fn==1){
         printf("\n\t\t\tMovie is already present");
-        goto aao;
+        Sleep(600);
+        admin();
     }
     else{
     fp=fopen("Movie.txt","a");
