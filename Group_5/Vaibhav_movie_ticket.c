@@ -89,6 +89,7 @@ void add_movie()
     system("cls");
     int option;
     int a;
+    FILE *fp;
     printf("\t\tEnter Category:\n");
     printf("\t\t1.2D Hindi\n\t\t2.2D English\n\t\t3.3D Hindi\n\t\t4.3D English\n");
     scanf("%d",&option);
@@ -97,7 +98,6 @@ void add_movie()
         case(1):
             system("cls");
     printf("\t\t2D Hindi");
-    FILE *fp;
     fp=fopen("data1.txt","a+");
     system("cls");
 
@@ -112,6 +112,17 @@ void add_movie()
     printf("\n\tENTER TICKET PRICE   :-");
     fflush(stdin);
     gets(p.cost);
+         while(fread (&p, sizeof(struct Movie), 1, fp))
+    {
+        if(strcmp(p.name,p.name)==0)
+        {
+           printf("\n\tMOVIE ALREADY PRESENT\n\n");
+           printf("\n\tPRESS ANY KEY TO CONTINUE: ");
+           getch();
+           main();
+
+        }
+    }
     fwrite (&p, sizeof(struct Movie), 1, fp);
     fclose(fp);
     printf("\n\tPRESS ANY KEY TO CONTINUE: ");
@@ -120,7 +131,7 @@ void add_movie()
     break;
         case(2):
             system("cls");
-    printf("\t\t2D English");
+    printf("\t\t2D Hindi");
     fp=fopen("data2.txt","a+");
     system("cls");
 
@@ -135,6 +146,17 @@ void add_movie()
     printf("\n\tENTER TICKET PRICE   :-");
     fflush(stdin);
     gets(p.cost);
+         while(fread (&p, sizeof(struct Movie), 1, fp))
+    {
+        if(strcmp(p.name,p.name)==0)
+        {
+           printf("\n\tMOVIE ALREADY PRESENT\n\n");
+           printf("\n\tPRESS ANY KEY TO CONTINUE: ");
+           getch();
+           main();
+
+        }
+    }
     fwrite (&p, sizeof(struct Movie), 1, fp);
     fclose(fp);
     printf("\n\tPRESS ANY KEY TO CONTINUE: ");
@@ -142,8 +164,8 @@ void add_movie()
     main();
     break;
         case(3):
-             system("cls");
-    printf("\t\t3D Hindi");
+            system("cls");
+    printf("\t\t2D Hindi");
     fp=fopen("data3.txt","a+");
     system("cls");
 
@@ -158,6 +180,17 @@ void add_movie()
     printf("\n\tENTER TICKET PRICE   :-");
     fflush(stdin);
     gets(p.cost);
+         while(fread (&p, sizeof(struct Movie), 1, fp))
+    {
+        if(strcmp(p.name,p.name)==0)
+        {
+           printf("\n\tMOVIE ALREADY PRESENT\n\n");
+           printf("\n\tPRESS ANY KEY TO CONTINUE: ");
+           getch();
+           main();
+
+        }
+    }
     fwrite (&p, sizeof(struct Movie), 1, fp);
     fclose(fp);
     printf("\n\tPRESS ANY KEY TO CONTINUE: ");
@@ -166,7 +199,7 @@ void add_movie()
     break;
         case(4):
             system("cls");
-    printf("\t\t2D English");
+    printf("\t\t2D Hindi");
     fp=fopen("data4.txt","a+");
     system("cls");
 
@@ -181,6 +214,17 @@ void add_movie()
     printf("\n\tENTER TICKET PRICE   :-");
     fflush(stdin);
     gets(p.cost);
+         while(fread (&p, sizeof(struct Movie), 1, fp))
+    {
+        if(strcmp(p.name,p.name)==0)
+        {
+           printf("\n\tMOVIE ALREADY PRESENT\n\n");
+           printf("\n\tPRESS ANY KEY TO CONTINUE: ");
+           getch();
+           main();
+
+        }
+    }
     fwrite (&p, sizeof(struct Movie), 1, fp);
     fclose(fp);
     printf("\n\tPRESS ANY KEY TO CONTINUE: ");
