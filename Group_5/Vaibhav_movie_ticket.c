@@ -131,7 +131,7 @@ void add_movie()
     break;
         case(2):
             system("cls");
-    printf("\t\t2D Hindi");
+    printf("\t\t2D English");
     fp=fopen("data2.txt","a+");
     system("cls");
 
@@ -165,7 +165,7 @@ void add_movie()
     break;
         case(3):
             system("cls");
-    printf("\t\t2D Hindi");
+    printf("\t\t3D Hindi");
     fp=fopen("data3.txt","a+");
     system("cls");
 
@@ -199,7 +199,7 @@ void add_movie()
     break;
         case(4):
             system("cls");
-    printf("\t\t2D Hindi");
+    printf("\t\t3D English");
     fp=fopen("data4.txt","a+");
     system("cls");
 
