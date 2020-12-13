@@ -20,6 +20,7 @@ struct Movie
     char code[20];
     int date;
     char cost[20];
+    int seats;
 };
 struct Movie p,temp;
 
@@ -88,7 +89,6 @@ void add_movie()
 {
     system("cls");
     int option;
-    int a;
     FILE *fp;
     printf("\t\tEnter Category:\n");
     printf("\t\t1.2D Hindi\n\t\t2.2D English\n\t\t3.3D Hindi\n\t\t4.3D English\n");
@@ -109,6 +109,7 @@ void add_movie()
     gets(p.code);
     printf("\n\tENTER AVAILABLE SEATS    :-");
     scanf("%d",&p.date);
+    p.seats = p.date;
     printf("\n\tENTER TICKET PRICE   :-");
     fflush(stdin);
     gets(p.cost);
@@ -131,7 +132,7 @@ void add_movie()
     break;
         case(2):
             system("cls");
-    printf("\t\t2D English");
+    printf("\t\t2D Hindi");
     fp=fopen("data2.txt","a+");
     system("cls");
 
@@ -165,7 +166,7 @@ void add_movie()
     break;
         case(3):
             system("cls");
-    printf("\t\t3D Hindi");
+    printf("\t\t2D Hindi");
     fp=fopen("data3.txt","a+");
     system("cls");
 
@@ -199,7 +200,7 @@ void add_movie()
     break;
         case(4):
             system("cls");
-    printf("\t\t3D English");
+    printf("\t\t2D Hindi");
     fp=fopen("data4.txt","a+");
     system("cls");
 
@@ -237,7 +238,6 @@ void search_movie()
 {
        system("cls");
     int option;
-    int a;
         FILE *fp;
     printf("\t\tEnter Category:\n");
     printf("\t\t1.2D Hindi\n\t\t2.2D English\n\t\t3.3D Hindi\n\t\t4.3D English\n");
@@ -246,7 +246,7 @@ void search_movie()
     {
         case(1):
     fp=fopen("data1.txt","r");
-    int option,flag=0;
+    int flag=0;
     char name1[20];
     system("cls");
     printf("\n\t Enter Movie Name :-");
@@ -647,6 +647,7 @@ void edit_movie()
 
         case 3 : printf("\n\tEnter New Available Seats - ");
         scanf("%d",&p.date);
+        p.seats=p.date;
         fflush(stdin);
         break;
 
@@ -729,6 +730,7 @@ void edit_movie()
 
         case 3 : printf("\n\tEnter New Seats Available - ");
         scanf("%d",&p.date);
+        p.seats=p.date;
         fflush(stdin);
         break;
 
@@ -810,6 +812,7 @@ void edit_movie()
 
         case 3 : printf("\n\tEnter New Seats Available - ");
         scanf("%d",&p.date);
+        p.seats=p.date;
         fflush(stdin);
         break;
 
@@ -891,6 +894,7 @@ void edit_movie()
 
         case 3 : printf("\n\tEnter New Seats Available - ");
         scanf("%d",&p.date);
+        p.seats=p.date;
         fflush(stdin);
         break;
 
@@ -1061,8 +1065,6 @@ book_ticket()
 {
   system("cls");
     int option;
-    int a;
-    int s;
     int z;
         FILE *fp,*fp1,*fp2;
     printf("\t\tEnter Category:\n");
@@ -1074,7 +1076,7 @@ book_ticket()
     fp=fopen("data1.txt","a+");
     fp1=fopen("book.txt","w");
     fp2=fopen("temp.txt","a+");
-    int option,flag=0;
+    int flag=0;
     char name1[20];
     system("cls");
     printf("\n\t Enter Movie Name :-");
@@ -1265,8 +1267,6 @@ cancel_ticket()
 {
    system("cls");
     int option;
-    int a;
-    int s;
     int z;
         FILE *fp,*fp1,*fp2;
     printf("\t\tEnter Category:\n");
@@ -1278,7 +1278,7 @@ cancel_ticket()
     fp=fopen("data1.txt","a+");
     fp1=fopen("book.txt","w");
     fp2=fopen("temp.txt","a+");
-    int option,flag=0;
+    int flag=0;
     char name1[20];
     system("cls");
     printf("\n\t Enter Movie Name :-");
@@ -1291,7 +1291,7 @@ cancel_ticket()
             flag=1;
             printf("\n\t\t Enter No. of Seats to cancel:");
             scanf("%d",&z);
-        if(p.date>z)
+        if(p.seats>=(p.date+z))
         {
          p.date = p.date + z;
          fwrite (&p, sizeof(struct Movie), 1, fp1);
@@ -1301,7 +1301,7 @@ cancel_ticket()
         else
         {
             fwrite (&p, sizeof(struct Movie), 1, fp2);
-            printf("Insufficient Seats");
+            printf("Excessive Seats");
         }
         }
         else
@@ -1338,7 +1338,7 @@ cancel_ticket()
             flag=1;
             printf("\n\t\t Enter No. of Seats to cancel:");
             scanf("%d",&z);
-        if(p.date>z)
+        if(p.seats>=(p.date+z))
         {
          p.date = p.date + z;
          fwrite (&p, sizeof(struct Movie), 1, fp1);
@@ -1348,7 +1348,7 @@ cancel_ticket()
         else
         {
             fwrite (&p, sizeof(struct Movie), 1, fp2);
-            printf("Insufficient Seats");
+            printf("Excessive Seats");
         }
         }
         else
@@ -1385,7 +1385,7 @@ cancel_ticket()
             flag=1;
             printf("\n\t\t Enter No. of Seats to cancel:");
             scanf("%d",&z);
-        if(p.date>z)
+        if(p.seats>=(p.date+z))
         {
          p.date = p.date + z;
          fwrite (&p, sizeof(struct Movie), 1, fp1);
@@ -1395,7 +1395,7 @@ cancel_ticket()
         else
         {
             fwrite (&p, sizeof(struct Movie), 1, fp2);
-            printf("Insufficient Seats");
+            printf("Excessive Seats");
         }
         }
         else
@@ -1432,7 +1432,7 @@ cancel_ticket()
             flag=1;
             printf("\n\t\t Enter No. of Seats to cancel:");
             scanf("%d",&z);
-        if(p.date>z)
+        if(p.seats>=(p.date+z))
         {
          p.date = p.date + z;
          fwrite (&p, sizeof(struct Movie), 1, fp1);
@@ -1442,7 +1442,7 @@ cancel_ticket()
         else
         {
             fwrite (&p, sizeof(struct Movie), 1, fp2);
-            printf("Insufficient Seats");
+            printf("Excessive Seats");
         }
         }
         else
