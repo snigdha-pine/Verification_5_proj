@@ -1,17 +1,30 @@
 #include<iostream>
 using namespace std;
 
-int COUNT=0, FRONT=-1, REAR=-1;
+int FRONT=-1, REAR=-1;
+uint32_t status = 0;
 
-int PUSHOVR(int n)      //Checking overflow
+void status_reg(int i)                  //Status register
+{
+    if(i == 1)
+        status = status + (1<<24);
+    if(i == 0)
+        status = status - (1<<24);
+}
+
+int PUSHOVR(int n)                      //Checking overflow
 {
     if(FRONT == -1)
         ++REAR;
     if(FRONT < (n-1))
+    {
+        status &= ~(1 << 16);
         return 1;
+    }
     else
     {
         cout << "Array is full" << endl;
+        status |= (1 << 16);
         return 0;
     }
 }
@@ -25,41 +38,70 @@ void PUSH(uint32_t arr[], int n)       //Push operation
         cin >> DATAPUSH;
         ++FRONT;
         arr[FRONT] = DATAPUSH;
-        ++COUNT;
+        status_reg(1);
     }
 }
 
-int POPUND()
+int POPUND()                            //Checking underflow
 {
     if((REAR == -1) || (REAR > FRONT))
     {
         cout << "Array is Empty" << endl;
+        status |= (1 << 15);
         return 0;
     }
     else
+    {
+        status &= ~(1 << 15);
         return 1;
+    }
 }
 
-uint32_t POP(uint32_t arr[])
+uint32_t POP(uint32_t arr[])            //POP operation
 {
     uint32_t DATAPOP;
     if(POPUND())
     {
         DATAPOP = arr[REAR];
         ++REAR;
+        status_reg(0);
         return DATAPOP;
     }
     else
         return -1;
 }
 
-void display(uint32_t arr[])
+void flush(uint32_t arr[])              //Flush operation
 {
-    for(int i=REAR;i<=FRONT;i++)
+    if(POPUND())
     {
-        cout << arr[i] << " " << endl;
+        for(int i = REAR; i<=FRONT; i++)
+            arr[i] = '\0';
+        FRONT = REAR = -1;
+        arr[FRONT] = '\0';
+        cout << "FLUSH operation performed" << endl;
+        status = 0;
     }
 }
+
+void display(uint32_t arr[])            //Display
+{
+    if(REAR == -1 || REAR > FRONT)
+    {
+        cout << "Array is empty" << endl;
+    }
+    else
+    {
+        for(int i=REAR;i<=FRONT;i++)
+        {
+            cout << arr[i] << " " << endl;
+        }
+    }
+
+    uint32_t temp = 520093696;
+    cout << "Status : " << ((status & temp) >> 24) << endl;
+}
+
 
 int main(void)
 {
@@ -67,7 +109,7 @@ int main(void)
     int choice;
     cout << "Enter the configuration of FIFO" << endl;
     cin >> config;
-    cout << "\tMenu:\n1)PUSH\n2)POP\n3)Change Configuration of FIFO operations\n4)Exit\n5)Display" << endl;
+    cout << "\tMenu:\n1)PUSH\n2)POP\n3)Change Configuration of FIFO operations\n4)Flush\n5)Display\n6)Exit" << endl;
     while(1)
     {
         cout << "Enter your choice" << endl;
@@ -93,7 +135,7 @@ int main(void)
                         if((1<<2) & config)
                         {
                             uint32_t DATAPOP = POP(arr);
-                            if(DATAPOP == -1)
+                            if(REAR == FRONT)
                                 cout << "No value to show" << endl;
                             else
                                 cout << "Popped value is = " << DATAPOP << endl;
@@ -107,14 +149,17 @@ int main(void)
             case 3: cout << "Please enter the new configuration for FIFO operations" << endl;
                     cin >> config;
                     break;
-            case 4: exit(1);
+            case 4: cout << "You have selected the flush operation" << endl;
+                    flush(arr);
                     break;
             case 5: cout << "\nDisplaying..." << endl;
+                    fflush(stdin);
                     display(arr);
+                    break;
+            case 6: exit(1);
                     break;
             default: cout << "Wrong choice" << endl;
                      break;
         }
     }
 }
-
