@@ -1,0 +1,2309 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#include<windows.h>
+#include<string.h>
+#define Maxline 40
+
+COORD coord= {0,0};
+char Dusername[]={"User"};
+char Dpas[]={"1234567890"};
+char Hotel_name[]={"Default"};
+
+
+void Customer();
+void Room();
+void Setting();
+int password_Setting();
+void Password(char a[],char b[]);
+void Login();
+
+void Admin();
+/*******************************************  Customer  Data Structure ********************/
+struct Cust{
+char Name[30],Address[50],Email_id[50],Mob_no[10],Nationality[30],MembName[10][30],date[8];
+int stay,Room_No,catgory;
+struct Cust *link;
+};
+struct Cust *Start=NULL;
+struct Cust *current=NULL;
+struct Cust *prev=NULL;
+struct Cust *temp,*ptr;
+
+
+/******************************************* CUSTOMER DETAIL FUNCTION *********************************/
+void Cust_Add();
+void Cust_Modify();
+void Cust_Display();
+void Cust_Delete();
+void Cust_DeleteAll();
+void Cust_DeleteOne();
+void Cust_Change_Room(int orm_no);
+void CReq();
+void Cust_Search();
+void category1(char a[]);
+
+/******************************************* CUSTOMER BILLING PARAMETER *********************************/
+float stay_rate=1000,Service_tax=0.1;
+
+
+
+/******************************************* CUSTOMER BILLING FUNCTION *********************************/
+void generate_bill();
+void edit_bill();
+
+/*******************************************  Room  Data Structure ********************/
+struct Room{
+int Room_No,AC,Astatus;
+char cat[5],Av,status[10];
+char Cname[30];
+char req[100],cm[100];
+}data1[Maxline];
+int n=0,k=0;
+
+/******************************************* Room  FUNCTION *********************************/
+void Room_Add();
+void Room_Modify();
+void Room_Display();
+void Room_Delete();
+void Room_Analysis();
+void Room_Search();
+void Room_Check();
+void Room_Book(char *a,int b,char c,int );
+void Avail(char a);
+
+/*******************************************  Room  CODE  **********************************/
+void Room_code()
+{
+    printf("\nRoom Code");
+    printf("\n\nCode: SR\t\tCategory : Single Room");
+    printf("\n\nCode: DR\t\tCategory : Double Room");
+    printf("\n\nCode: DLX\t\tCategory : Deluxe Room");
+    printf("\n\nCode: DDR\t\tCategory : Double-Double (Twin Double) Room");
+    printf("\n\nCode: TR\t\tCategory : Twin Room");
+
+}
+void strcpy1(char *s,char *t)
+{ int j=0;
+    for ( j = 0; t[j] != '\0'; ++j) {
+        s[j] = t[j];
+    }
+    s[j] = '\0';
+}
+
+
+
+/*******************************************  Room  Category **************/
+
+void category1(char a[2])
+{
+    if (strcmp(a,"SR")==0)
+{
+     printf("\t\tSingle Room");
+}
+     if (strcmp(a,"DR")==0)
+{
+     printf("\t\tDouble Room");
+}
+     if (strcmp(a,"DLX")==0)
+{
+     printf("\t\tDeluxe Room");
+     }
+    if (strcmp(a,"DDR")==0)
+{
+     printf("\t\tDouble-Double (Twin Double) Room");
+     }
+     if (strcmp(a,"TR")==0)
+{
+     printf("\t\tTwin Room");
+     }
+
+}
+/*******************************************  Room  Avaialability **************/
+
+void Avail(char a)
+{ if (a=='A')
+{
+     printf("\t\t\t\tAVAILABLE\t\t");
+}
+if (a=='O')
+{
+     printf("\t\t\t\tOCCUPIED\t\t");
+}
+
+}
+/*******************************************  Room  Ac Non-Ac Category **************/
+
+void AC_NON_AC(int a)
+{ if (a==1)
+{
+     printf("\t\tAC Room");
+}
+if (a==2)
+{
+     printf("\t\tNON-AC Room");
+}
+
+}
+/*******************************************  Room  Category Detail ********************************/
+
+void Room_category_Detail(char a[4])
+{ if (strcmp(a,"SR")==0)
+{
+     printf("\n\n\t\t\tCategory : Single Room\n\n\nDESCRIPTION :- \n\nA room with the facility of single bed. It is meant for single occupancy. It has an attached bathroom, a small dressing table, a small bedside table, and a small writing table. Sometimes it has a single chair too.");
+}
+ else if (strcmp(a,"DR")==0)
+{
+     printf("\n\n\t\t\tCategory : Double Room\n\n\nDESCRIPTION :- \n\n A room with the facility of double bed. There are two variants in this type depending upon the size of the bed\nKing Double Room (with king size double bed)\nQueen Double Room (with queen size double bed)\nIt is equipped with adequate furniture such as dressing table and a writing table, a TV, and a small fridge.");
+}
+else if (strcmp(a,"DLX")==0)
+{
+     printf("\n\n\t\t\tCategory : Deluxe Room\n\n\nDESCRIPTION :-\n\nThey are available in Single Deluxe and Double Deluxe variants. Deluxe room is well furnished. Some amenities are attached bathroom, a dressing table, a bedside table, a small writing table, a TV, and a small fridge. The floor is covered with carpet and most suitable for small families. ");
+     }
+     else if (strcmp(a,"DDR")==0)
+{
+     printf("\n\n\t\t\tCategory :  Double-Double (Twin Double) Room\n\n\nDESCRIPTION :- \n\n This room provides two double beds with separate headboards. It is ideal for a family with two children below 12 years.");
+     }
+    else if (strcmp(a,"TR")==0)
+{
+     printf("\n\n\t\t\tCategory :  Twin Room\n\n\nDESCRIPTION :- \n\nThis room provides two single beds with separate headboards. It is meant for two independent people. It also has a single bedside table shared between the two beds.");
+     }
+     else{
+        printf("\n\n\t\t\tINVALID CATEGORY ");
+     }
+     getch();
+}
+
+void user(int rm);
+/********************************************  User FUNCTION ******************************************/
+void User_Login();
+int Room_Avalablity(int a);
+void Phone_no();
+void Room_details();
+void UReq(int rm);
+void URdisplay(int rm);
+void Floor_plan();
+
+
+
+/********************************************  TITLE ******************************************/
+void Title()
+{   system("CLS");
+    printf("\t\t\t\t\t\t____________________________________________________________________________\n\t\t\t\t\t\t");
+    printf("   _______________________________________________________________________    \n\t\t\t\t\t\t");
+    printf("                        ");
+    printf("%s",Hotel_name);
+    printf(" Hotel                               \n\t\t\t\t\t\t");
+    printf("    ______________________________________________________________________    \n\t\t\t\t\t\t");
+    printf("|____________________________________________________________________________|\n\t\t\t\t\t\t\t");
+}
+
+
+
+char SubHeading(char a[])
+{    Title();
+    printf("\n\n\t\t\t%s\n\n\n\t\t\t",a);
+    return (0);
+}
+
+void Customer_Detail();
+void Customer_Billing();
+
+void main1();
+void gotoxy(int x,int y)
+{
+    coord.X=x;
+    coord.Y=y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),coord);
+}
+int main(void)
+{ Sleep(4000);
+//loading_bar();
+FILE *fp;
+fp=fopen("Password_file.txt","wb");
+fclose(fp);
+fp=fopen("Customer_detail.txt","wb");
+fclose(fp);
+fp=fopen("Request_file.txt","w");
+
+fclose(fp);
+struct Cust *Start=NULL;
+system("CLS");
+    system ("COLOR 4F");
+    gotoxy(50,15);
+    printf("____________________________________________________________________________\n\t\t\t\t\t\t");
+    printf("|  _______________________________________________________________________   |\n\t\t\t\t\t\t");
+    printf("|  |                           WELCOME                                    |  |\n\t\t\t\t\t\t");
+    printf("|  |                             TO                                       |  |\n\t\t\t\t\t\t");
+    printf("|  |                    ");
+    printf("%s",Hotel_name);
+    printf("                           |  |\n\t\t\t\t\t\t");
+    printf("|  _______________________________________________________________________|  |\n\t\t\t\t\t\t");
+    printf("|____________________________________________________________________________|\n\t\t\t\t\t\t\t");
+ Sleep(1000);
+ main1();
+
+}
+void main1()
+{
+     int a;
+
+    while(1)
+    {
+        system("CLS");
+        char s[]={"********* Selection Window   *********"};
+        SubHeading(s);
+        printf("\n\n\t\t\t1. Admin Window \n\n\t\t\t2. User Window \n\n\t\t\t3. Setting \n\n\t\t\t Enter the First character :\t");
+        a=getch();
+
+        switch (a)
+        {
+            case '1':
+                       printf("\tAdmin Window Is Selected");
+                       Sleep(1000);
+                       Login();
+                       break;
+
+            case '2':
+                       printf("\tUser Window Is Selected");
+                       Sleep(1000);
+                       User_Login();
+                       break;
+
+            case '3':
+                       printf("\tSetting Window Is Selected");
+                       Sleep(1000);
+                       Setting();
+                       break;
+
+
+
+            default : printf("\tInvalid Choice ");
+                       Sleep(1000);
+        }
+
+
+    }
+}
+
+void Setting()
+{
+    int a;
+    system("CLS");
+    Title();
+    printf("\n\n\n\t\t1. Change Hotel Name \n\t\t2.Change password \n\t\t3. Change background Color\nEnter the ");
+    scanf("%d",&a);
+    switch(a)
+    {
+        case 1: printf("Old Hotel Name :%s",Hotel_name);
+                printf("\nEnter the New Hotel Name ");
+                fflush(stdin);
+                gets(Hotel_name);
+                Sleep(1000);
+                break;
+
+        case 2: password_Setting();
+                 Sleep(1000);
+                 break;
+    }
+    getch();
+}
+
+
+
+ void Login(){
+
+ char Us[20],Pass[20];
+ int i;
+ system("CLS");
+FILE *fp;
+fp=fopen("Password_file.txt","rb+");
+
+//Password(Us,Pass);
+fscanf(fp,"%s %s",Us,Pass);
+//Password(Dusername,Dpas);
+
+char Username[20],pass[20];
+//int i,j,ch;
+ for (i=3;i>=0;i--){
+
+
+ char s[]={"******LOGIN SCREEN******"};
+ SubHeading(s);
+
+ printf("\n\t\t\t\t\t\t\tUsername : \t");
+ gets(Username);
+
+    if ((strcmp(Username,Dusername)==0)||(strcmp(Username,Us)==0))
+    {
+        printf("\n\t\t\t\t\t\t\tPassword : \t");
+        gets(pass);
+       /* for (j=0;j<=9;j++)
+        {
+            ch=getch();
+            if (ch==' ')
+            {
+                break;
+            }
+
+           else {
+            pass[j]=ch;
+            }
+
+            ch='*';
+           printf("%c",ch);
+        }
+       // pass[j]='\0';
+        ((strcmp(Username,Dusername)==0)||(strcmp(Username,Us)==0)) */
+       if ((strcmp(pass,Dpas)==0)||(strcmp(pass,Pass)==0))
+           {
+                printf("\n\n\t\t\t\t\t\t\tLogin Successfull");
+                Sleep(1500);
+                Admin();
+           }
+     else {
+
+        printf("\n\t\t\t\t\t\t\tIncorrect password");
+     }
+    }
+    else {
+        printf("\n\t\t\t\t\t\t\tInvalid User");
+    }
+
+
+    if (i==1)
+        printf("\n\t\t\t\t\t\t\tThis is Your Last Attempt \n\t\t\t\t\t\t\t\a");
+    else if (i==0)
+        printf("\n\t\t\t\t\t\t\tNo More Attempts \n\t\t\t\t\t\t\t");
+
+    else
+    printf("\n\t\t\t\t\t\t\tAttempts Left : %d\n\t\t\t\t\t\t\t",i);
+        Sleep(1000);
+ }
+fclose(fp);
+
+}
+
+
+
+
+
+
+ /******************************   Password ******************************/
+ void Password(char Dusername[10] ,char Dpas[10] )
+ { char Username[10],pass[10];
+int i,j,ch;
+ for (i=3;i>=0;i--){
+
+
+ char s[]={"******LOGIN SCREEN******"};
+ SubHeading(s);
+
+ printf("\n\t\t\t\t\t\t\tUsername : \t");
+ gets(Username);
+    if (strcmp(Username,Dusername)==0 )
+    {
+        printf("\n\t\t\t\t\t\t\tPassword : \t");
+        for (j=0;j<=9;j++)
+        {
+            ch=getch();
+            if (ch==' ')
+            {
+                break;
+            }
+
+           else {
+            pass[j]=ch;
+            }
+
+            ch='*';
+           printf("%c",ch);
+        }
+        pass[j]='\0';
+
+       if (strcmp(pass,Dpas)==0)
+           {
+                printf("\n\n\t\t\t\t\t\t\tLogin Successfull");
+                Sleep(1500);
+                Admin();
+           }
+     else {
+
+        printf("\n\t\t\t\t\t\t\tIncorrect password");
+     }
+    }
+    else {
+        printf("\n\t\t\t\t\t\t\tInvalid User");
+    }
+
+
+    if (i==1)
+        printf("\n\t\t\t\t\t\t\tThis is Your Last Attempt \n\t\t\t\t\t\t\t\a");
+    else if (i==0)
+        printf("\n\t\t\t\t\t\t\tNo More Attempts \n\t\t\t\t\t\t\t");
+
+    else
+    printf("\n\t\t\t\t\t\t\tAttempts Left : %d\n\t\t\t\t\t\t\t",i);
+        Sleep(1000);
+ }
+
+
+ }
+
+/*****************************  Admin MENU *********************************/
+void Admin()
+{
+    int a;
+
+    while(1)
+    {
+        system("CLS");
+
+        char s[]={"*********Admin Window*********"};
+        SubHeading(s);
+        printf("\n\n\t\t\t1. Customer Window \n\n\t\t\t2. Room Window \n\n\t\t\t3. Setting \n\n\t\t\t4. Back to Selection Window \n\n\t\t\t Enter the First character :\t");
+        a=getch();
+
+        switch (a)
+        {
+            case '1':
+                       printf("\tCUSTOMER Window Is Selected");
+                       Sleep(1000);
+                       Customer();
+                       break;
+
+            case '2':
+                       printf("\tRoom Window Is Selected");
+                       Sleep(1000);
+                       Room();
+                       break;
+
+            case '3':
+                       printf("\tSetting Window Is Selected");
+                       Sleep(1000);
+                       Setting();
+                       break;
+
+            case '4':
+                       printf("\tBack to Selction Window Is Selected");
+                       Sleep(1000);
+                       main1();
+                       break;
+
+
+
+            default : printf("\tInvalid Choice ");
+                       Sleep(1000);
+        }
+
+
+    }
+
+}
+
+
+
+
+void Customer()
+{
+   int a;
+
+    while(1)
+    {
+        system("CLS");
+
+        char s[]={"*********CUSTOMER WINDOW*********"};
+        SubHeading(s);
+        printf("\n\n\t\t\t1. Customer Detail \n\n\t\t\t2. Customer Billing \n\n\t\t\t3. Back to Selection Window \n\n\t\t\t4. Back to Login Screen \n\n\t\t\t Enter the First character :\t");
+        a=getch();
+
+        switch (a)
+        {
+            case '1':
+                       printf("\tCustomer Detail Is Selected");
+                       Sleep(1000);
+                       Customer_Detail();
+                       break;
+
+            case '2':
+                       printf("\tCustomer Billing Is Selected");
+                       Sleep(1000);
+                       Customer_Billing();
+                       break;
+
+            case '3':
+                       printf("\tBack to Selction Window Is Selected");
+                       Sleep(1000);
+                       main1();
+                       break;
+
+             case '4':
+                       printf("\tBack to Login Screen Is Selected");
+                       Sleep(1000);
+                       Login();
+                       break;
+
+            default : printf("\tInvalid Choice ");
+                       Sleep(1000);
+        }
+
+
+    }
+}
+/**************************************************** Customer Menu ************************************************************/
+void Customer_Detail()
+{ int a,t;
+
+    while(1)
+    {
+        system("CLS");
+
+        char s[]={"*********CUSTOMER DETAIL WINDOW*********"};
+        SubHeading(s);
+        printf("\n\n\t\t\t1. Add Record \n\n\t\t\t2. Modify Record \n\n\t\t\t3. Display Record \n\n\t\t\t4. Search Record \n\n\t\t\t5. Delete Record\n\n\t\t\t6. Customer Change Window \n\n\t\t\t7. Customer Request Window \n\n\t\t\t8. Back to Selection Window \n\n\t\t\t9. Back to Login Screen \n\n\t\t\t Enter the First character :\t");
+        a=getch();
+        system("CLS");
+        switch (a)
+        {
+            case '1':
+                       printf("\tAdd Record Is Selected");
+                       Sleep(1000);
+                       Cust_Add();
+                       Sleep(500);
+                       break;
+
+            case '2':
+                       printf("\tModify Record Is Selected");
+                       Sleep(1000);
+                       Cust_Modify();
+                       Sleep(500);
+                       break;
+
+           case '3' :
+                       printf("\tDisplay Record Is Selected");
+                       Sleep(1000);
+                       Cust_Display();
+                       Sleep(500);
+                       break;
+            case '4' :
+                       printf("\tSearch  Record Is Selected");
+                       Sleep(1000);
+                       Cust_Search();
+                       Sleep(500);
+                       break;
+
+             case '5' :
+                       printf("\tDelete Record Is Selected");
+                       Sleep(1000);
+                       Cust_Delete();
+                       Sleep(500);
+                       break;
+
+
+            case '6':
+                       printf("\tEnter the Room ");
+                       scanf("%d",&t);
+                       Sleep(1000);
+                       Cust_Change_Room(t);
+                       Sleep(500);
+                       break;
+            case '7':
+                       printf("\tBack to Selection Window Is Selected");
+                       Sleep(1000);
+                       CReq();
+                       Sleep(500);
+                       break;
+
+            case '8':
+                       printf("\tBack to Selection Window Is Selected");
+                       Sleep(1000);
+                       main1();
+                       Sleep(500);
+                       break;
+
+             case '9':
+                       printf("\tBack to Login Screen Is Selected");
+                       Sleep(1000);
+                       main();
+                       Sleep(500);
+                       break;
+
+            default : printf("\tInvalid Choice ");
+                       Sleep(1000);
+        }
+
+
+    }
+}
+
+/**************************************************** Customer Add  ************************************************************/
+
+void Cust_Add()
+{   system("CLS");
+
+//int i;
+
+        char s[]={"*********CUSTOMER ADD DETAIL *********"};
+        SubHeading(s);
+        FILE *fp,*fq;
+        //fp=fopen("Customer_Detail.db","rb");
+
+       // printf("Enter the Room : \t");
+        //scanf("%d",&r);
+
+        fp = fopen("Customer_detail.txt","ab+");
+
+        if (fp==NULL)
+        {
+            printf("/n/n Error in open a file ");
+        }
+        else
+        {
+
+
+      struct Cust *temp,*ptr;
+       temp=(struct Cust *)malloc(sizeof(struct Cust));
+
+        if(temp==NULL)
+        {
+                printf("\nOut of Memory Space:\n");
+                exit(0);
+        }
+        else {
+                int rm,check,p;
+
+           check= Room_Avalablity(0);
+        if (check==0)
+        {
+            printf("Room are fully Occupied ");
+        }
+        if (check==1){
+        printf("\n\n Enter the Room No. : ");
+        scanf("%d",&rm);
+        Sleep(1000);
+        system("CLS");
+        char s[]={"*********CUSTOMER ADD DETAIL *********"};
+        SubHeading(s);
+        printf("\n\n Enter the Room No. : %d\n\n",rm);
+        temp->Room_No=rm;
+        printf("\nEnter the  Name\t");
+        scanf("%s",temp->Name);
+        printf("\nEnter the  Address\t");
+        scanf("%s",temp->Address);
+        printf("\nEnter the  Nationality\t");
+        scanf("%s",temp->Nationality);
+        printf("\nEnter the  Mobile No.\t");
+        scanf("%s",temp->Mob_no);
+        printf("\nEnter the  Email Id\t");
+        scanf("%s",temp->Email_id);
+        printf("\nEnter the arrival dd/mm/yyyy\t");
+        scanf("%s",temp->date);
+       // scanf("%c",&temp->yyyy);
+       printf("\n\nEnter the  Stay period");
+        scanf("%d",&temp->stay);
+        // printf("\n\nEnter the  Category");
+        //scanf("%d ",&temp->catgory);
+          printf("\n\nEnter the no. of member : ");
+          scanf("%d",&p);
+          printf("\n\nEnter member name : \n");
+          for (int i=1;i<=p;i++)
+          { printf("\nMember %d :",i);
+            scanf("%s",temp->MembName[i]);
+
+          }
+
+        Room_Book(temp->Name,rm,'O',0);
+        fprintf(fp,"%d %s %s %s %s %s %s %d \n",temp->Room_No,temp->Name,temp->Address,temp->Nationality,temp->Mob_no,temp->Email_id,temp->date,temp->stay);
+        temp->link=NULL;
+         if(Start==NULL)
+        {
+                Start=temp;
+        }
+        else
+        {
+                ptr=Start;
+                while(ptr->link!=NULL)
+                {
+                        ptr=ptr->link;
+                }
+                ptr->link=temp;
+        }
+
+
+        }
+        }
+}
+fclose(fp);
+
+
+}
+
+/**************************************************** Customer Modify ************************************************************/
+
+void Cust_Modify()
+{FILE *fp;
+
+    struct Cust *ptr;
+    int flag=0;
+    char mb[30];
+    system("CLS");
+
+        char s[]={"*********CUSTOMER MODIFY WINDOW*********"};
+        SubHeading(s);
+        system("CLS");
+            if (Start==NULL)
+    {
+        printf("\nList is empty \t");
+    }
+    else {
+            ptr=Start;
+
+
+        fp = fopen("Customer_detail.txt","rb+");
+
+            printf("\n\nEnter the Mobile Number :\t");
+            gets(mb);
+             while (ptr!=NULL)
+             {
+                  if (strcmp(mb,ptr->Mob_no)==0)
+              { flag=1;
+                int rm;
+
+               // Room_code();
+              //  printf("\n\n Enter the Room Code : ");
+                //scanf("%s",ch);
+
+
+
+            //printf("\n\nRoom are Available List \n\n");
+           //check= Room_Test(ch);
+
+       // printf("\n\n Enter the Room No. : ");
+        //scanf("%d",&rm);
+        Sleep(1000);
+        system("CLS");
+        char s[]={"*********CUSTOMER MODIFY DETAIL *********"};
+        SubHeading(s);
+        printf("\n\n Enter the Room No. : %d\n\n",ptr->Room_No);
+        printf("\nEnter the  Name\t");
+        scanf("%s",ptr->Name);
+        printf("\nEnter the  Address\t");
+        scanf("%s",ptr->Address);
+        printf("\nEnter the  Nationality\t");
+        scanf("%s",ptr->Nationality);
+        printf("\nEnter the  Mobile No.\t");
+        scanf("%s",ptr->Mob_no);
+        printf("\nEnter the  Email Id\t");
+        scanf("%s",ptr->Email_id);
+        printf("\nEnter the arrival dd/mm/yyyy\t");
+        scanf("%s",ptr->date);
+       // scanf("%c",&temp->yyyy);
+       printf("\n\nEnter the  Stay period");
+        scanf("%d",&ptr->stay);
+        // printf("\n\nEnter the  Category");
+        //scanf("%d ",&temp->catgory);
+
+         printf("ptr-> Name : %s  ptr-> Room : %d \n",ptr->Name,ptr->Room_No);
+         getch();
+         Room_Book(ptr->Name,ptr->Room_No,'O',1);
+
+        }
+
+
+
+
+       fprintf(fp,"%d %s %s %s %s %s %s %d \n",ptr->Room_No,ptr->Name,ptr->Address,ptr->Nationality,ptr->Mob_no,ptr->Email_id,ptr->date,ptr->stay);
+
+
+             ptr= ptr->link;
+
+
+             }
+
+                      if (flag==0)
+                        {
+                                printf("RECORD NOT FOUNDED ");
+                      }
+                          getch();
+
+}
+fclose(fp);
+}
+
+/**************************************************** Customer Display ************************************************************/
+
+void Cust_Display()
+{
+char Name[30],Address[50],Email_id[50],Mob_no[10],Nationality[30],MembName[10][30],date[8];
+int stay,Room_No,catgory;
+ FILE *fp;
+  fp = fopen("Customer_detail.txt","rb");
+        if (fp==NULL)
+        {
+            printf("/n/n Error in open a file ");
+        }
+        else
+        {
+      struct Cust *ptr;
+        if(Start==NULL)
+        {
+                printf("\nList is empty:\n");
+                return;
+        }
+        else
+        {
+                ptr=Start;
+                printf("\nThe List elements are:\n");
+                while(ptr!=NULL)
+                {// fscanf(fp,"%d",&temp);
+                 fscanf(fp,"%d %s %s %s %s %s %s %d",&Room_No,Name,Address,Nationality,Mob_no,Email_id,date,&stay);
+
+                         printf("\n\nEnter the  Room No.\t%d",Room_No);
+                         printf("\n\nEnter the  Name\t%s",Name);
+                         printf("\nEnter the  Address\t%s",Address);
+                         printf("\nEnter the  Nationality\t%s",Nationality);
+                         printf("\nEnter the  Mobile No.\t%s",Mob_no);
+                         printf("\nEnter the  Email Id\t%s",Email_id);
+                         printf("\nEnter the arrival dd/mm/yyyy\t%s",date);
+                        printf("\nEnter the  Stay period\t%d",stay);
+                        ptr=ptr->link ;
+                }
+        }
+        }
+        fclose(fp);
+getch();
+}
+/**************************************************** Customer Delete ************************************************************/
+
+
+void Cust_Delete()
+{
+    int a;
+    char mb[10];
+
+     FILE *fp;
+
+    while(1)
+    {
+        system("CLS");
+
+        char s[]={"*********CUSTOMER DELETE WINDOW*********"};
+        SubHeading(s);
+        printf("\n\n\t\t\t1. Delete One Record \n\n\t\t\t2. Delete All Record \n\n\t\t\t3. Back to Customer  \n\n\t\t\t4. Back to Customer window \n\n\t\t\t Enter the First character :\t");
+        a=getch();
+        system("CLS");
+        switch (a)
+        {
+            case '1': Cust_DeleteOne();
+                      break;
+            case '2':
+                     fp=fopen("Customer_detail.txt","w");
+                     struct Cust *temp;
+
+                     while(Start != NULL)
+                         {
+                           temp = Start;
+                           Start = Start->link;
+                           free(temp);
+                               }
+                      printf("SUCCESSFULLY DELETED ALL \n");
+                     fclose(fp);
+                     break;
+            case '3': Customer_Detail();
+                      break;
+            case '4': Customer();
+                      break;
+            default : printf("\tInvalid Choice ");
+                       Sleep(1000);
+                      }
+
+
+
+
+}
+}
+
+void Cust_DeleteOne()
+{
+    struct Cust *ptr,*temp;
+    char Name[30],Address[50],Email_id[50],Mob_no[10],Nationality[30],MembName[10][30],date[8];
+    int stay,Room_No,catgory;
+    char  mb[15];
+
+     FILE *fp;
+     fp=fopen("Customer_detail.txt","wb");
+
+     if (fp==NULL)
+     {
+         printf("\n File is not open ");
+     }
+
+     else {
+
+
+   int num=0,i=0;
+   char number[30];
+    printf("Enter the Mobile number : \t");
+    scanf("%s",number);
+
+     ptr=Start;
+    while(strcmp(ptr->Mob_no,number)!=0)
+    {  num++;
+      ptr=ptr->link;
+        }
+
+
+    if (num == 0) {
+       // Room_Book(temp->Name,rm,'O',0);
+       Start = ptr->link;
+       free(ptr);
+
+    }
+     else {
+         ptr=Start;
+      while ((i <num-1 )&& (ptr->link != NULL)) {
+          ptr = ptr->link;
+          i++;
+     }
+
+     temp = ptr->link;
+     ptr->link = temp->link;
+
+     free(temp);
+
+     Start = ptr;
+
+
+      }
+     }
+
+     ptr=Start;
+     while (ptr!=NULL)
+     {
+     fprintf(fp,"%d %s %s %s %s %s %s %d \n",ptr->Room_No,ptr->Name,ptr->Address,ptr->Nationality,ptr->Mob_no,ptr->Email_id,ptr->date,ptr->stay);
+     ptr=ptr->link;
+     }
+
+
+ fclose (fp);
+
+    getch();
+
+}
+
+
+
+
+
+
+/**************************************************** Customer Search ************************************************************/
+
+void Cust_Search()
+{ //char Name[30],Address[50],Email_id[50],Mob_no[10],Nationality[30],MembName[10][30],date[8];
+//int stay,Room_No,catgory;
+ int a,flag=0;
+    char nm[30],mb[10],ad[30];
+
+    struct Cust *ptr;
+     FILE *fp;
+     fp = fopen("Customer_detail.txt","rb");
+
+
+        system("CLS");
+        char s[]={"*********CUSTOMER SEARCH WINDOW*********"};
+        SubHeading(s);
+        while(1){
+                system("CLS");
+        printf("\n\n\t\t\t1. Search by Name \n\n\t\t\t2. Search by Mobile Number \n\n\t\t\t3. Search by Address \n\n\t\t\t4. Back to Search menu  \n\n\t\t\t5. Back to Customer  \n\n\t\t\t6. Back to Customer window \n\n\t\t\t Enter the choice :\t");
+        a=getch();
+        system("CLS");
+    if (Start==NULL)
+    {
+        printf("\nList is empty \t");
+    }
+    else {
+            ptr=Start;
+           switch(a)
+           {
+           case '1' :
+                        printf("\n\nEnter the Name :\t");
+                        gets(nm);
+                        while (ptr!=NULL)
+                         { fscanf(fp,"%d %s %s %s %s %s %s %d \n",&ptr->Room_No,ptr->Name,ptr->Address,ptr->Nationality,ptr->Mob_no,ptr->Email_id,ptr->date,&ptr->stay);
+
+                          if (strcmp(nm,ptr->Name)==0)
+                          {   flag=1;
+                              system("CLS");
+
+                         printf("\n\nEnter the  Room\t%d",ptr->Room_No);
+                         printf("\nEnter the  Name\t%s",ptr->Name);
+                         printf("\nEnter the  Address\t%s",ptr->Address);
+                         printf("\nEnter the  Nationality\t%s",ptr->Nationality);
+                         printf("\nEnter the  Mobile No.\t%s",ptr->Mob_no);
+                         printf("\nEnter the  Email Id\t%s",ptr->Email_id);
+                         printf("\nEnter the arrival dd/mm/yyyy\t%s",ptr->date);
+                         printf("\nEnter the  Stay period\t%d",ptr->stay);
+
+
+                          }
+                         ptr= ptr->link;
+                      }
+                      if (flag==0)
+                        {
+                                printf("RECORD NOT FOUNDED ");
+                      }
+                          getch();
+                       break;
+
+           case '2' :
+                        printf("\n\nEnter the Mobile Number :\t");
+                        gets(mb);
+                   while (ptr!=NULL)
+                      { fscanf(fp,"%d %s %s %s %s %s %s %d \n",&ptr->Room_No,ptr->Name,ptr->Address,ptr->Nationality,ptr->Mob_no,ptr->Email_id,ptr->date,&ptr->stay);
+
+                           if (strcmp(mb,ptr->Mob_no)==0)
+                          {  flag=1;
+                              system("CLS");
+
+                          printf("\n\nEnter the  Room\t%d",ptr->Room_No);
+                         printf("\nEnter the  Name\t%s",ptr->Name);
+                         printf("\nEnter the  Address\t%s",ptr->Address);
+                         printf("\nEnter the  Nationality\t%s",ptr->Nationality);
+                         printf("\nEnter the  Mobile No.\t%s",ptr->Mob_no);
+                         printf("\nEnter the  Email Id\t%s",ptr->Email_id);
+                         printf("\nEnter the arrival dd/mm/yyyy\t%s",ptr->date);
+                         printf("\nEnter the  Stay period\t%d",ptr->stay);
+
+
+                          }
+                         ptr= ptr->link;
+
+                      }
+                      if (flag==0)
+                        {
+                                printf("RECORD NOT FOUNDED ");
+                      }
+                          getch();
+                        break;
+
+
+           case '3' :  printf("\n\nEnter the Mobile Number :\t");
+                        gets(ad);
+                   while (ptr!=NULL)
+                      {
+                          fscanf(fp,"%d %s %s %s %s %s %s %d \n",&ptr->Room_No,ptr->Name,ptr->Address,ptr->Nationality,ptr->Mob_no,ptr->Email_id,ptr->date,&ptr->stay);
+                           if (strcmp(ad,ptr->Address)==0)
+                          {  flag=1;
+                              system("CLS");
+                          printf("\n\nEnter the  Room\t%d",ptr->Room_No);
+                         printf("\n\nEnter the  Name\t%s",ptr->Name);
+                         printf("\nEnter the  Address\t%s",ptr->Address);
+                         printf("\nEnter the  Nationality\t%s",ptr->Nationality);
+                         printf("\nEnter the  Mobile No.\t%s",ptr->Mob_no);
+                         printf("\nEnter the  Email Id\t%s",ptr->Email_id);
+                         printf("\nEnter the arrival dd/mm/yyyy\t%s",ptr->date);
+                         printf("\nEnter the  Stay period\t%d",ptr->stay);
+
+
+                          }
+                         ptr= ptr->link;
+                      }
+                      if (flag==0)
+                        {
+                                printf("RECORD NOT FOUNDED ");
+                      }
+                                    getch();
+                       break;
+
+           case '4' : Cust_Search();
+                      break;
+           case '5' : Customer_Detail();
+                      break;
+           case '6' : Customer();
+                     break;
+           default : printf("\tInvalid Choice ");
+                       Sleep(1000);
+           }
+            }
+            }
+getch();
+}
+
+
+
+
+
+
+
+
+/***************************************  Room **********************************/
+void Room()
+{ int a,rm;
+
+    while(1)
+    {
+        system("CLS");
+        char s[]={"*********ROOM DETAIL WINDOW*********"};
+        SubHeading(s);
+        printf("\n\n\t\t\t1. Add Room \n\n\t\t\t2. Modify Room \n\n\t\t\t3. Display Room \n\n\t\t\t4. Search Room \n\n\t\t\t5. Delete Room\n\n\t\t\t6. Room Analysis\n\n\t\t\t7. Back to Selection Window \n\n\t\t\t8. Back to Login Screen \n\n\t\t\t Enter the First character :\t");
+        a=getch();
+        system("CLS");
+        switch (a)
+        {
+            case '1':
+                       printf("\tAdd Record Is Selected");
+                       Sleep(1000);
+                       Room_Add();
+                       Sleep(500);
+                       break;
+
+            case '2':
+                       printf("\tModify Record Is Selected");
+                       Sleep(1000);
+                       Room_Modify();
+                       Sleep(500);
+                       break;
+
+           case '3' :
+                       printf("\tDisplay Record Is Selected");
+                       Sleep(1000);
+                       Room_Display();
+                       Sleep(500);
+                       break;
+            case '4' :
+                       Room_Search();
+                       Sleep(500);
+                       break;
+
+             case '5' :
+                       printf("\tDelete Record Is Selected");
+                       Sleep(1000);
+                       Room_Delete();
+                       Sleep(500);
+                       break;
+
+
+            case '6' :
+                       printf("\tRoom Analysis Record Is Selected");
+                       Sleep(1000);
+                       Room_Analysis();
+                       Sleep(500);
+                       break;
+
+            case '7':
+                       printf("\tBack to Selection Window Is Selected");
+                       Sleep(1000);
+                      main1();
+                       Sleep(500);
+                       break;
+
+             case '8':
+                       printf("\tBack to Login Screen Is Selected");
+                       Sleep(1000);
+                       main();
+                       Sleep(500);
+                       break;
+
+            default : printf("\tInvalid Choice ");
+                       Sleep(1000);
+        }
+
+
+    }
+
+}
+/**************************************************** Room Add  ************************************************************/
+
+void Room_Add()
+{   system("CLS");
+
+        char s[]={"*********ROOM ADD DETAIL *********"};
+       SubHeading(s);
+
+    int ch;
+
+    FILE *fp;
+    fp=fopen("Room.txt","wb");
+
+    if (fp==NULL)
+    {
+        system("CLS");
+        printf("\n\n\t\tError File cannot open file");
+    }
+    else { Entry:
+            printf("\n\n\t\tEnter the No. Of Room :\t");
+            scanf ("%d",&n);
+            system("CLS");
+         for (int i=1;i<=n;i++)
+         {
+
+
+    detail1:
+
+    Sleep(500);
+    system("CLS");
+    int j;
+     char t[10]={"NONE"};
+    printf("\n\n\n\t\tRoom : %d ",i);
+    data1[i].Room_No=i;
+    Room_code();
+    printf("\n\t\tcategory  : ");
+    scanf("%s",data1[i].cat);
+    printf("\n\n\n\t\tAC/Non AC : ");
+    scanf("%d",&data1[i].AC);
+    data1[i].Av='A';
+    data1[i].Astatus=1;
+    strcpy(data1[i].status,"None");
+
+/*
+   for (j = 0; t[j] != '\0'; ++j) {
+        data1[i].Cname[j] = t[j];
+    }*/
+
+   strcpy(data1[i].Cname,t);
+   strcpy(data1[i].req,"****************");
+   strcpy(data1[i].cm,"****************");
+
+    printf("\n\n\t\t1. Save\t\t2. Need any Changes\t\t3. Cancel\n\n\t\tEnter your choice :\t");
+    scanf("%d",&ch);
+
+    if (ch==1)
+    {
+        system("CLS");
+      // fprintf(fp,"%d %d %d %s %s  ",data1[i].Room_No,data1[i].AC,data1[i].Av,data1[i].Cname,data1[i].cat);
+        fwrite(&data1[i], sizeof(data1[i]), 1, fp);
+
+        printf ("\n\n\n\n\t\tRoom %d Detail Successfully Entered\n\n",i);
+        Sleep(2000);
+
+    }
+
+    else if (ch==2)
+    {   printf ("\n\n\t\tWait a sec for getting New Entry detail Page for again  .....\n\n");
+         Sleep(500);
+        system("CLS");
+        goto detail1;
+    }
+    else if (ch==3)
+    { printf ("\n\n\t\tCancelling .....\n\n");
+         Sleep(500);
+        system("CLS");
+        goto Entry;
+
+    }
+    }
+    }
+
+fclose(fp);
+printf("\n\nPress any key to continue");
+    getch();
+
+}
+
+/**************************************************** Room Modify ************************************************************/
+
+void Room_Modify()
+{
+    int i=1,flag=0,rm;
+    system("CLS");
+        char s[]={"*********ROOM MODIFY WINDOW*********"};
+        SubHeading(s);
+
+             // int ch;
+    FILE *fp;
+    fp=fopen("Room.txt","rb+");
+
+    if (fp==NULL)
+    {
+        system("CLS");
+        printf("\n\n\t\tError File cannot open file");
+    }
+    else {
+            printf ("\n\n\t\tEnter the Room No. :\t");
+             scanf ("%d",&rm);
+    while(fread(&data1,sizeof(struct Room), 1, fp)&&i<=n)
+    {
+     if (rm==data1[i].Room_No)
+     {   flag=1;
+            printf("\n\n\t\tRoom Founded :\n\n\t\t");
+
+            //detail1:
+                Sleep(50);
+                   printf("\n\t\tRoom no.  :%d\t",i);
+                   data1[i].Room_No=i;
+                   Room_code();
+                    printf("\n\n\t\tRoom Code :\t");
+                    scanf("%s",data1[i].cat);
+
+                    printf("\n\t\tEnter the \n[1] Ac Room \n[2] Non-Ac Room:\t");
+                    scanf("%d",&data1[i].AC);
+                    strcpy(data1[i].status,"None");
+
+                   /*  printf("\n\n1. Save\t\t2. Cancel");
+                     scanf("%d",&ch);
+
+
+
+    if (ch==1)
+    {
+        system("CLS");
+        fwrite(&data1[i], sizeof(data1[i]), 1, fp);
+        printf ("\n\n\n\n\t\tUpdating process is going on ...... ");
+        Sleep(2000);
+        printf ("\n\n\n\n\t\tUpdation Is Completed .........\n\n\t\tRoom Detail Entered Successfully ");
+    }
+     if (ch==2)
+    {
+        system("CLS");
+        goto exit;
+    }*/
+    }
+    fwrite(&data1[i], sizeof(data1[i]), 1, fp);   i++;
+    }
+     if (flag==0)
+        {
+            printf("\n\n\t\tRoom Not Found");
+      }
+    }
+
+    fclose(fp);
+printf("\n\nPress any key to continue");
+getch();
+
+}
+/**************************************************** ROOM Search ************************************************************/
+void Room_Search()
+{
+    int i=1,flag=0,rm;
+    system("CLS");
+        char s[]={"*********ROOM Search WINDOW*********"};
+        SubHeading(s);
+
+    FILE *fp;
+    fp=fopen("Room.txt","rb");
+
+    if (fp==NULL)
+    {
+        system("CLS");
+        printf("\n\n\t\tError File cannot open file");
+    }
+    else {
+
+    while(fread(&data1,sizeof(struct Room), 1, fp)&&i<=n)
+    {
+     if (rm==data1[i].Room_No)
+     {   flag=1;
+            printf("\n\n\t\tRoom Founded :\n\n\t\t");
+
+                Sleep(50);
+                   printf("\n\t\tRoom no.   :\t%d",data1[i].Room_No);
+                   category1(data1[i].cat);
+                   AC_NON_AC(data1[i].AC);
+                   Avail(data1[i].Av);
+                   printf("Customer : %s",data1[i].Cname);
+
+
+     }
+     i++;
+
+}
+ if (flag==0)
+        {
+            printf("\n\n\t\tRoom Not Found");
+      }
+    }
+    fclose(fp);
+printf("\n\nPress any key to continue");
+getch();
+//return flag;
+
+}
+
+/**************************************************** ROOM Display ************************************************************/
+
+void Room_Display()
+{  int i=1;
+        system("CLS");
+        char s[]={"*********ROOM DISPLAY WINDOW*********"};
+        SubHeading(s);
+    if (n==0)
+    {   system("CLS");
+        printf("\n\n\t\tDatabase is Empty");
+    }
+    else {
+            FILE *fp;
+    fp=fopen("Room.txt","rb");
+            if (fp == NULL)
+    {
+        fprintf(stderr, "\nError opening file\n");
+
+
+    }
+else
+
+{   printf("\n\tRoom no.\t\tRoom Category \t\t Room Type \t\t Availablity \n................................................................................................................\n");
+
+    while(i<=n)
+    {fread(&data1,sizeof(struct Room), 1, fp);
+
+
+    printf("\n\t%d\t",data1[i].Room_No);
+    category1(data1[i].cat);
+    AC_NON_AC(data1[i].AC);
+    Avail(data1[i].Av);
+    printf("Customer : %s",data1[i].Cname);
+     i++;
+    }
+    // close file
+    fclose (fp);
+    }
+    }
+printf("\n\nPress any key to continue");
+  getch();
+}
+
+
+/**************************************************** ROOM Delete ************************************************************/
+void Room_Delete()
+{
+int i=1,rm;
+    system("CLS");
+        char s[]={"*********ROOM DELETE WINDOW*********"};
+        SubHeading(s);
+
+      int ch;
+    FILE *fp;
+    fp=fopen("Room.txt","rb+");
+
+    if (fp==NULL)
+    {
+        system("CLS");
+        printf("\n\n\t\tError File cannot open file");
+    }
+    else {
+            printf ("\n\n\t\tEnter the Room No. :\t");
+             scanf ("%d",&rm);
+             printf("\n\n\t\tARE YOU SURE ????\n\n\t\t[1] Yes (DELETE) \n\t\t[2] Cancel");
+             scanf("%d",&ch);
+
+    if (ch==1)
+    {
+        system("CLS");
+        i=rm;
+         while(fread(&data1,sizeof(struct Room), 1, fp)&&i<n)
+    {
+                   Sleep(50);
+                   data1[i].Room_No = data1[i+1].Room_No;
+                   strcpy1(data1[i].cat,data1[i+1].cat);
+                   data1[i].AC =data1[i+1].AC;
+                   data1[i].Av=data1[i+1].Av;
+                   strcpy1(data1[i].Cname,data1[i+1].Cname);
+                   strcpy1(data1[i].req,data1[i+1].req);
+                   strcpy1(data1[i].cm,data1[i+1].cm);
+                   strcpy1(data1[i].status,data1[i+1].status);
+
+
+                   i++;
+            }
+        fwrite(&data1[i], sizeof(data1[i]), 1, fp);
+        n=n-1;
+        printf ("\n\n\n\n\t\tUpdating process is going on ...... ");
+        Sleep(2000);
+        printf ("\n\n\n\n\t\tUpdation Is Completed .........\n\n\t\tRoom Delete Successfully ");
+    }
+    else if (ch==2)
+    {
+        system("CLS");
+        goto go;
+    }
+
+
+    }
+
+    go:
+    fclose(fp);
+printf("\n\nPress any key to continue");
+getch();
+
+}
+
+
+
+/**************************************************** ROOM Analysis ************************************************************/
+
+void Room_Analysis()
+{int i=1,a1=0,n1=0,s1=0,d1=0,dl1=0,dd1=0,t1=0,ch;
+system("CLS");
+
+        char s[]={"*********ROOM ANALYSIS WINDOW*********"};
+        SubHeading(s);
+    if (n==0)
+    {   system("CLS");
+        printf("\n\n\t\tDatabase is Empty");
+    }
+    else {
+            FILE *fp;
+    fp=fopen("Room.txt","rb");
+            if (fp == NULL)
+    {
+        printf("\nError opening file\n");
+
+
+    }
+else
+{    printf(" \t\t\tROOM ANALYSIS WINDOW ");
+    printf("\n\n\n\t\t[1] Based on Room Category  \n\n\n\t\t[2] Based on Room Type  ");
+    scanf("%d",&ch);
+    while(fread(&data1,sizeof(struct Room), 1, fp)&&i<=n)
+    {
+   // category1(data1[i].cat);
+    if (strcmp(data1[i].cat,"SR")==0)
+   s1++;
+
+    if (strcmp(data1[i].cat,"DR")==0)
+    d1++;
+
+    if (strcmp(data1[i].cat,"DLX")==0)
+    dl1++;
+
+    if (strcmp(data1[i].cat,"DDR")==0)
+    dd1++;
+
+    if (strcmp(data1[i].cat,"TR")==0)
+    t1++;
+
+    //AC_NON_AC(data1[i].AC);
+    if (data1[i].AC==1)
+    a1++;
+
+    if (data1[i].AC==2)
+    n1++;
+     i++;
+    }
+
+        switch(ch)
+    { case 1:printf ("\n\n\nSINGLE ROOM       \t");
+              for ( i=0;i<s1;i++)
+               {printf("*");}
+               printf("\t%d\n",i);
+              printf ("DOUBLE ROOM       \t");
+              for ( i=0;i<d1;i++)
+              {printf("*");}
+               printf("\t%d\n",i);
+                printf ("DELUXE ROOM       \t");
+               for ( i=0;i<dl1;i++)
+               {printf("*");}
+               printf("\t%d\n",i);
+              printf ("TWIN DOUBLE ROOM  \t");
+               for ( i=0;i<dd1;i++)
+              {printf("*");}
+               printf("\t%d\n",i);
+               printf ("TWIN ROOM         \t");
+               for ( i=0;i<t1;i++)
+              {printf("*");}
+               printf("\t%d\n",i);
+               break;
+
+       case 2:      printf ("\n\n\nAC ROOM    \t");
+              for ( i=0;i<a1;i++)
+               {printf("*");}
+               printf("\t%d\n",i);
+
+               printf ("NON-AC ROOM\t");
+              for ( i=0;i<n1;i++)
+               {printf("*");}
+               printf("\t%d\n",i);
+               break;
+     default: printf("Invalid choice");
+    }
+
+    // read file contents till end of file
+
+    // close file}
+
+    }
+    fclose (fp);
+    }
+
+printf("\n\nPress any key to continue");
+  getch();
+
+
+}
+/**************************************************** ROOM BOOK ************************************************************/
+void Room_Book(char *s,int rm,char c,int check_bit)
+{  int i=1,flag=0;
+    FILE *fp;
+    fp=fopen("Room.txt","rb+");
+
+    if (fp==NULL)
+    {
+        system("CLS");
+        printf("\n\n\t\tError File cannot open file");
+    }
+    else {
+
+    while(i<=n)
+    {fread(&data1,sizeof(struct Room), 1, fp);
+     if ((data1[i].Room_No==rm)&&data1[i].Av=='A'&&(check_bit==0))
+     {   flag=1;
+                 Sleep(50);
+                 data1[i].Av=c;
+                 strcpy1(data1[i].Cname,s);
+                getch();
+      /*if (ch==1)
+    {
+        system("CLS");
+        fwrite(&data1[i], sizeof(data1[i]), 1, fp);
+        printf ("\n\n\n\n\t\tUpdating process is going on ...... ");
+        Sleep(2000);
+        printf ("\n\n\n\n\t\tUpdation Is Completed .........\n\n\t\tRoom Detail Entered Successfully ");
+    }
+     if (ch==2)
+    {
+        system("CLS");
+        goto exit;
+    }*/
+    }
+    if ((data1[i].Room_No==rm)&&(check_bit==1)){
+            strcpy1(data1[i].Cname,s);
+
+    }
+    fwrite(&data1[i], sizeof(data1[i]), 1, fp);
+      i++;
+    }
+     if (flag==0)
+        {
+            printf("\n\n\t\tRoom is occupied");
+      }
+    }
+
+    fclose(fp);
+getch();
+
+}
+
+/***********************************************    Room Ended ************************************************/
+
+
+int password_Setting()
+{ int k=0;
+system("CLS");
+FILE *fp;
+char pass1[10],user1[10],Cpass[10],Cuse[10];
+fp=fopen("Password_file.txt","rb+");
+if (fp!=NULL){
+      fscanf(fp,"%s %s",user1,pass1);
+        fclose(fp);
+      printf("Enter the Old User : ");
+      gets(Cuse);
+
+      printf("Enter the Old password : ");
+      gets(Cpass);
+      if ((strcmp(Cuse,user1)!=0)||(strcmp(Cpass,pass1)!=0))
+      {
+          printf("\n\nIncorrect user and Password \n");
+          Sleep(2000);
+          fclose(fp);
+          return 0;
+      }
+
+      fp=fopen("Password_file.txt","wb+");
+      printf("\n\n\nUser and Password Matched !!!!!! \n\n\n");
+      printf("Enter the New User : ");
+     gets(Cuse);
+      printf("Enter the New password : ");
+       gets(Cpass);
+
+      printf("\n\n DO you really want to Change \n\n [1] Yes \n\n[2] No\n\n");
+      scanf("%d",&k);
+      if(k==1){
+
+      Sleep(1500);
+       printf(" New User : %s \n",Cuse);
+      printf("New password : %s\n",Cpass);
+      printf("Hurray !!! User and Password changes saved successfull\n")        ;
+      fprintf(fp,"%s %s",Cuse,Cpass);
+      }
+
+fclose(fp);
+}
+
+else {
+    printf("FIle NOT Exit ");
+    fclose(fp);
+}
+
+Sleep(2000);
+
+printf("press any key !!");
+      getch();
+      return 0;
+}
+
+/**************************************** Customer Billing ************************************************/
+
+void Customer_Billing()
+{int a;
+
+    while(1)
+    {
+        system("CLS");
+        char s[]={"********* Customer Billing Window   *********"};
+        SubHeading(s);
+        printf("\n\n\t\t\t1. Generate Bill \n\n\t\t\t2. Edit Bill Parameter \n\n\t\t\t3. Back to Customer  Window \n\n\t\t\t4. Back to Admin Window \n\n\t\t\t5. Back to Selection Screen \n\n\t\t\t Enter the First character :\t");
+        a=getch();
+
+        switch (a)
+        {
+            case '1':
+                       printf("\tGenerate Bill Is Selected");
+                       Sleep(1000);
+                       generate_bill();
+                       break;
+
+           case '2':
+                       printf("\tEdit  Bill Is Selected");
+                       Sleep(1000);
+                       edit_bill();
+                       break;
+            case '3':
+                       printf("\tBack to Customer Window Is Selected");
+                       Sleep(1000);
+                       Customer();
+                       break;
+
+            case '4':
+                       printf("\tBack to Admin Window Is Selected");
+                       Sleep(1000);
+                       Admin();
+                       break;
+
+             case '5':
+                       printf("\tBack to Selection Screen Is Selected");
+                       Sleep(1000);
+                       main1();
+                       break;
+
+}
+
+    }
+    getch();
+}
+
+void generate_bill()
+{struct Cust *ptr;
+    int flag;
+    char nm[30];
+
+        system("CLS");
+        char s[]={"         Bil Generation          \n---------------------------------"};
+        SubHeading(s);
+
+    if (Start==NULL)
+    {
+        printf("\nList is empty \t");
+    }
+    else {
+            ptr=Start;
+        printf("\n\nEnter the Name :\t");
+        gets(nm);
+        system("CLS");
+         char s[]={"         Bil Generation          \n         ---------------------------------"};
+        SubHeading(s);
+        while (ptr!=NULL)
+                      {
+                           if (strcmp(nm,ptr->Name)==0)
+                          {   flag=1;
+                              printf("\n\nName\t%s",ptr->Name);
+                              printf("\nAddress\t%s",ptr->Address);
+                              printf("\nNationality\t%s",ptr->Nationality);
+                              printf("\nEnter the  Mobile No.\t%s",ptr->Mob_no);
+                         printf("\nEmail Id\t%s",ptr->Email_id);
+                         printf("\nArrival dd/mm/yyyy\t%s",ptr->date);
+                         printf("\nStay period\t%d",ptr->stay);
+                         printf("\n\n\n\n--------------------------------------------------------------------------------------------------------------------------------");
+                         printf("\n\n\tRoom Category \t\t\tRoom Type\t\t\t\tStay Period\t\t\t\t\n\n");
+                         printf("\n   ------------------------------------------------------------------------------------\n");
+                         printf("\n\tSIngles             \t\tAC         \t\t%d\n",ptr->stay);
+                         printf("\n\n\t\t\t\tService Tax = %.2f",Service_tax);
+                         printf("\n\n\t\t\t\tStay Rate= %.2f",stay_rate);
+                         float amt;
+                         amt=stay_rate*ptr->stay;
+
+                         printf("\n\n\t\t\t\tBilling Amount : %.2f",(amt+(amt*Service_tax)));
+                          }
+                         ptr= ptr->link;
+
+                      }
+                      if (flag==0)
+                        {
+                                printf("RECORD NOT FOUNDED ");
+                      }
+
+
+}
+getch();
+}
+
+void edit_bill()
+{system("CLS");
+        char s[]={"         Edit Bill Parameter           \n---------------------------------"};
+        SubHeading(s);
+        float a,b;
+        int ch;
+
+        printf("\n\nDo you Really want to change : \n\n[1] Yes \n\n[2] No");
+        scanf("%d",&ch);
+        switch (ch)
+        {
+            case 1: printf("Enter the new Service Tax : \t");
+                     a=Service_tax;
+                    scanf("%f",&Service_tax);
+                    Service_tax=Service_tax/100;
+                    printf("Enter the new Room Stay Rate : \t");
+                    b=stay_rate;
+                    scanf("%f",&stay_rate);
+                    Sleep(1000);
+                    printf("\n\n service tax change from %.2f -> %.2f ",a,Service_tax);
+                    printf("\n\n Room Stay Rate change from %.2f -> %.2f ",b,stay_rate);
+
+                     break;
+
+            case 2 : printf("Edit process is cancelled");
+                     break;
+            default: printf("Invalid Choice : ");
+                     break;
+
+        }
+
+getch();
+}
+
+/**********************************************  User Module ************************************************/
+ void User_Login()
+ { int i=1,rm,flag;
+ system("CLS");
+
+        char h[]={"*********User Login Window*********"};
+        SubHeading(h);
+
+printf("\n\n\n\t\t\t\t Enter the Room : ");
+scanf("%d",&rm);
+     FILE *fp;
+    fp=fopen("Room.txt","rb+");
+
+    if (fp==NULL)
+    {
+        system("CLS");
+        printf("\n\n\t\tError File cannot open file");
+    }
+    else {
+      flag=0;
+    while(fread(&data1,sizeof(struct Room), 1, fp)&&i<=n)
+    {
+
+        if (rm==data1[i].Room_No)
+        {   flag=1;
+        }
+     i++;
+    }
+
+    }
+    fclose(fp);
+
+ if (flag==1)
+ {
+     user(rm);
+ }
+else
+{
+    printf("Invalid user ");
+}
+getch();
+
+ }
+
+
+
+
+
+
+void user(int rm)
+{    int a;
+char ch[4];
+
+    while(1)
+    {
+        system("CLS");
+
+        char s[]={"*********User Window*********"};
+        SubHeading(s);
+      printf("\n\n\t\t\t1. Room Avaialabilty \n\n\t\t\t2.Hotel Staff Phone Number \n\n\t\t\t3.Floor Plan  \n\n\t\t\t4.Write Request \n\n\t\t\t5.Notification \n\n\t\t\t6. ROOM description \n\n\t\t\t7. Back to Selection window \n\n\t\t\t Enter the First character :\t");
+       a=getch();
+
+
+        switch (a)
+        {
+            case '1':
+                       printf("\tRoom Availabilty Is Selected");
+                       Sleep(1000);
+                       Room_Avalablity(1);
+                       break;
+
+            case '2':
+                       printf("\tHotel Staff Phone NumberIs Selected");
+                       Sleep(1000);
+                       Phone_no();
+                       break;
+
+            case '3':
+                       printf("\tFloor Plan Is Selected");
+                       Sleep(1000);
+                       Floor_plan();
+                       break;
+
+           case '4':
+                       printf("\tRequest Is Selected");
+                       Sleep(1000);
+
+                       UReq(rm);
+                       getch();
+                       break;
+
+
+          case '5':
+                       printf("\tNotification Is Selected");
+                       Sleep(1000);
+                       URdisplay(rm);
+                       break;
+
+         case '6':
+
+                       system("CLS");
+                       Room_code();
+                       printf("\n\n Enter the Room Code : ");
+                       scanf("%s",ch);
+                       system("CLS");
+                       Sleep(1000);
+                       Room_category_Detail(ch);
+                       break;
+
+           case '7':
+                       Sleep(1000);
+                       main1();
+                       break;
+
+          default : printf("\tInvalid Choice ");
+                       Sleep(1000);
+        }
+
+
+    }
+
+getch();
+}
+
+int  Room_Avalablity(int a)
+{   char ch[5];
+    int i=1,flag=0;
+    system("CLS");
+
+        char s[]={"*********Room  Availability List *********"};
+        SubHeading(s);
+
+    if (a==0)
+    {
+         Room_code();
+                printf("\n\n Enter the Room Code : ");
+               scanf("%s",ch);
+            printf("\n\nRoom are Available List \n\n");
+    }
+
+    FILE *fp;
+    fp=fopen("Room.txt","rb");
+
+    if (fp==NULL)
+    {
+        system("CLS");
+        printf("\n\n\t\tError File cannot open file");
+    }
+    else {
+
+    while(i<=n)
+    {fread(&data1,sizeof(struct Room), 1, fp);
+     if (((strcmp(data1[i].cat,ch)==0))&&(data1[i].Av=='A')&&(a==0))
+     {   flag=1;
+
+                Sleep(50);
+                   printf("\n\t\tRoom no.   :\t%d",data1[i].Room_No);
+                   category1(data1[i].cat);
+                   AC_NON_AC(data1[i].AC);
+
+                       }
+      if ((data1[i].Av=='A')&&(a==1))
+     {               Sleep(100);
+                   printf("\n\t\tRoom no.   :\t%d",data1[i].Room_No);
+                   category1(data1[i].cat);
+                   AC_NON_AC(data1[i].AC);
+                   Avail(data1[i].Av);
+
+                       }
+     i++;
+
+}
+
+    }
+    fclose(fp);
+    getch();
+return flag;
+
+
+}
+
+void Phone_no()
+{
+
+    system("CLS");
+    char s[]={"********* Phone Book   *********"};
+    SubHeading(s);
+    printf("\n\n\tDESIGNATION\t\t\t NAME\t\t\t\tPhone No.\n");
+    printf("\n   ------------------------------------------------------------------------------------\n");
+    printf("\n\tManager           \t\tMR.KRISHNA       \t\t7011335087\n");
+    printf("\n\tROOM SERVICE HEAD \t\tMR.KUNAL RAJNAYAK\t\t7045453508\n");
+    printf("\n\tSWEEPER 1         \t\tMR.RAMESH        \t\t7045508994\n");
+    printf("\n\tSWEEPER 2         \t\tMR.SURESH        \t\t7045508994\n");
+    printf("\n\tSWEEPER 3         \t\tMR.DHARMESH      \t\t9825543994\n");
+    printf("\n\tSWEEPER 4         \t\tMR.KAMLESH       \t\t9435502294\n");
+    printf("\n\tSWEEPER 5         \t\tMR.KALPESH       \t\t9465501194\n");
+    printf("\n\tSWEEPER 6         \t\tMR.RAJESH        \t\t9665506694\n");
+    printf("\n\tSECRUITY GAURD 1  \t\tMR.SHER SINGH    \t\t9665506694\n");
+    printf("\n\tSECRUITY GAURD 2  \t\tMR.JETHALAL      \t\t9665506694\n");
+    printf("\n\tSECRUITY GAURD 3  \t\tMR.VARUN         \t\t9665506694\n");
+    getch();
+}
+
+void Floor_plan()
+{  system("CLS");
+system("CLS");
+    char s[]={"********* Floor Plan   *********"};
+    SubHeading(s);
+int i;
+printf("Room Plan");
+    for(i=1;i<=10;i++){
+    printf("\n\n\t\tRoom%d\t",i);
+    printf("\t\tRoom%d\t",i+10);
+    printf("\t\tRoom%d\n\t",i+20);}
+
+
+
+getch();
+}
+
+/********************************************* User Request ****************************************/
+
+void UReq(int rm)
+{
+    int i=1,flag=0;
+   system("CLS");
+
+
+        char s[]={"*********User Request WINDOW*********"};
+        SubHeading(s);
+
+             // int ch;
+    FILE *fp;
+    fp=fopen("Room.txt","rb+");
+
+    if (fp==NULL)
+    {
+        system("CLS");
+        printf("\n\n\t\tError File cannot open file");
+    }
+    else {
+
+    while(fread(&data1,sizeof(struct Room), 1, fp)&&i<=n)
+    {
+     if (rm==data1[i].Room_No)
+     {   flag=1;
+          //detail1:
+                Sleep(50);
+                   printf("\n\t\tRoom no.  :%d\t",data1[i].Room_No);
+
+                   getchar();
+                   printf("\n\nEnter the Req. \t");
+                   gets(data1[i].req);
+                   strcpy(data1[i].cm,"***********");
+                   strcpy(data1[i].status,"Not Seen By Admin");
+
+
+
+
+                   /*  printf("\n\n1. Save\t\t2. Cancel");
+                     scanf("%d",&ch);
+
+
+
+    if (ch==1)
+    {
+        system("CLS");
+        fwrite(&data1[i], sizeof(data1[i]), 1, fp);
+        printf ("\n\n\n\n\t\tUpdating process is going on ...... ");
+        Sleep(2000);
+        printf ("\n\n\n\n\t\tUpdation Is Completed .........\n\n\t\tRoom Detail Entered Successfully ");
+    }
+     if (ch==2)
+    {
+        system("CLS");
+        goto exit;
+    }*/
+    }
+    fwrite(&data1[i], sizeof(data1[i]), 1, fp);   i++;
+    }
+     if (flag==0)
+        {
+            printf("\n\n\t\tRoom Not Found");
+      }
+    }
+
+    fclose(fp);
+printf("\n\nPress any key to continue");
+getch();
+
+
+}
+
+void URdisplay(int rm)
+{
+
+    int i=1,flag=0;
+    system("CLS");
+        char s[]={"*********User Request View WINDOW*********"};
+        SubHeading(s);
+
+             // int ch;
+    FILE *fp;
+    fp=fopen("Room.txt","rb+");
+
+    if (fp==NULL)
+    {
+        system("CLS");
+        printf("\n\n\t\tError File cannot open file");
+    }
+    else {
+
+    while(fread(&data1,sizeof(struct Room), 1, fp)&&i<=n)
+    {
+     if (rm==data1[i].Room_No)
+     {   flag=1;
+
+            //detail1:
+                Sleep(50);
+                   printf("\n\t\tRoom no.  :%d\t",data1[i].Room_No);
+                   printf("\n\n Req. By You  \t");
+                   puts(data1[i].req);
+                    printf("\n\nComment by Admin \t ");
+                    puts(data1[i].cm);
+                    printf("\n\n Admin Status : \t %s",data1[i].status);
+                    data1[i].Astatus=0;
+
+                   /*  printf("\n\n1. Save\t\t2. Cancel");
+                     scanf("%d",&ch);
+
+
+
+    if (ch==1)
+    {
+        system("CLS");
+        fwrite(&data1[i], sizeof(data1[i]), 1, fp);
+        printf ("\n\n\n\n\t\tUpdating process is going on ...... ");
+        Sleep(2000);
+        printf ("\n\n\n\n\t\tUpdation Is Completed .........\n\n\t\tRoom Detail Entered Successfully ");
+    }
+     if (ch==2)
+    {
+        system("CLS");
+        goto exit;
+    }*/
+    }
+    i++;
+    }
+     if (flag==0)
+        {
+            printf("\n\n\t\tRoom Not Found");
+      }
+    }
+
+    fclose(fp);
+printf("\n\nPress any key to continue");
+getch();
+
+}
+
+void CReq()
+{
+
+
+
+    int i=1,flag=0;
+    system("CLS");
+        char s[]={"*********Admin Request WINDOW*********"};
+        SubHeading(s);
+
+             // int ch;
+    FILE *fp;
+    fp=fopen("Room.txt","rb+");
+
+    if (fp==NULL)
+    {
+        system("CLS");
+        printf("\n\n\t\tError File cannot open file");
+    }
+    else {
+
+    while(fread(&data1,sizeof(struct Room), 1, fp)&&i<=n)
+    {
+     if (data1[i].Astatus==0)
+     {   flag=1;
+          //detail1:
+                Sleep(50);
+                   printf("\n\t\tRoom no.  :%d\t",data1[i].Room_No);
+                   printf("\n\n Req. \t");
+                   puts(data1[i].req);
+                   printf("\n\nWrite the Comment (Admin) \t ");
+                   gets(data1[i].cm);
+                   strcpy(data1[i].status,"Admin Seen ");
+                   printf("\n\n Admin Status : \t %s",data1[i].status);
+                   data1[i].Astatus=1;
+                   /*  printf("\n\n1. Save\t\t2. Cancel");
+                     scanf("%d",&ch);
+
+
+
+    if (ch==1)
+    {
+        system("CLS");
+        fwrite(&data1[i], sizeof(data1[i]), 1, fp);
+        printf ("\n\n\n\n\t\tUpdating process is going on ...... ");
+        Sleep(2000);
+        printf ("\n\n\n\n\t\tUpdation Is Completed .........\n\n\t\tRoom Detail Entered Successfully ");
+    }
+     if (ch==2)
+    {
+        system("CLS");
+        goto exit;
+    }*/
+    }
+    fwrite(&data1[i], sizeof(data1[i]), 1, fp);   i++;
+    }
+     if (flag==0)
+        {
+            printf("\n\n\t\tRoom Not Found");
+      }
+    }
+
+    fclose(fp);
+printf("\n\nPress any key to continue");
+getch();
+
+}
