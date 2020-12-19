@@ -1,1 +1,1350 @@
-Divyanshu
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#include<dirent.h>
+
+
+int login();
+int teacher_login();
+void admin();
+void teacher();
+void teacher_entry();
+void add_teacher_data();
+int view_salary_status();
+int view_teachers_data();
+int delete_teachers_data();
+void edit_teachers_data();
+void update_salary();
+void list_of_teachers();
+void WriteListToFile();
+
+void class_1();
+void class_2();
+void class_3();
+void student();
+void student_entry();
+int view_students_data();
+int view_fee_status();
+void update_students_marks();
+void Write_List_of_student_To_File();
+void add_students_data();
+int delete_students_data();
+void edit_students_data();
+void update_fee();
+void list_of_students();
+void class_wise_student_list();
+
+
+
+int comp(char *arr, char *arr1);
+
+struct teacher* appendlistfromfile();
+struct student* append_student_list_from_file();
+
+struct student{
+   char student_first_name[30];
+   char last_name[10];
+    char student_gender[10];
+    char clas[10];
+    char fathers_name[30];
+    char mothers_name[30];
+    char addr[50];
+    long long int ph_no;
+    char adm_no[10];
+    float fee;
+    int eng;
+    int hin;
+    int mat;
+    struct student *next;
+};
+struct teacher{
+    char teacher_first_name[30];
+    char last_name[10];
+    char subject_teaches[15];
+    char teacher_id[10];
+    long long int ph_no;
+    char gender[10];
+    float salary;
+    struct teacher *next;
+};
+
+struct teacher *start=NULL;
+struct student *head=NULL;
+
+int comp(char *arr, char *arr1){
+    while(*arr == *arr1){
+        if(*arr == '\0' || *arr1 == '\0')
+            break;
+        arr++;
+        arr1++;
+    }
+    if(*arr == '\0' && *arr1 == '\0')
+        return 1;
+    else
+        return 0;
+}
+
+
+int main(void)
+{
+    //system("color fc");
+    mkdir("C:/Users/joshi/Desktop/C_language/school_management_system/teachers");
+    mkdir("C:/Users/joshi/Desktop/C_language/school_management_system/students");
+    start=appendlistfromfile();
+    head=append_student_list_from_file();
+    char choice;
+    while(1){
+
+        system("cls");
+        printf("\n\t****************************************");
+        printf("\n\tChoices are from \n");
+        printf("\t1. Admin Portal\n");
+        printf("\t2. Teacher Portal\n");
+        printf("\t3. Student Portal\n");
+        printf("\t4. Exit\n");
+        printf("\n\t****************************************");
+        printf("\n\tEnter your choice :- ");
+        scanf("%c",&choice);
+        switch(choice)
+        {
+        case '1':
+            system("cls");
+            if(login()){
+               admin();
+            }
+            break;
+        case '2':
+            system("cls");
+            if(teacher_login()){
+                    teacher();
+            }
+            else{
+                printf("\n\tWrong Login details \n\t\n    ************************************************* \n\t\t     Try Again\n\t\tPress any key to continue: ..");
+            }
+            break;
+        case '3':
+            system("cls");
+            student();
+            break;
+        case '4':
+            exit(0);
+            break;
+        default:
+            printf("\n\tIncorrect choice................\n");
+            break;//getch();
+
+
+        }
+    }
+}
+void student(){
+    char choice;
+    while(1){
+        system("cls");
+        printf("\n\n\t**********************************");
+        printf("\n\t0. Press 0 to exit ");
+        printf("\n\t1. view Teachers data");
+        printf("\n\t2. view Students data");
+        printf("\n\t3. view Fee status ");
+        printf("\n\n\t**********************************");
+        printf("\n\tEnter your choice : ");
+        scanf("%c",&choice);
+        if(choice=='0'){
+            break;
+        }
+        switch(choice)
+        {
+        case '1':
+            system("cls");
+            if(view_teachers_data()){
+                break;
+            }
+            else{
+                printf("\n\tTeacher not fount Wrong ID\n");
+            }
+            getch();
+            break;
+        case '2':
+            system("cls");
+            if(view_students_data()){
+                break;
+            }
+            else{
+                printf("\n\tStudent not fount Wrong admission NO. ");
+                printf("\n\tPress any key to continue --  ");
+            }
+            getch();
+            break;
+        case '3':
+            system("cls");
+            if(view_fee_status()){
+                getch();
+                break;
+            }else{
+                printf("\n\tStudent not found in our database");
+                printf("\n\tPress any key to continue");
+            }
+            getch();
+            break;
+        default:
+            printf("\n\n\t**********************************");
+            printf("\nWrong choice ----- ");
+            printf("Press any key to continue");
+            printf("\n\n\t**********************************");
+            getch();
+            break;
+
+        }
+    }
+}
+int view_fee_status(){
+    char ad[10];
+    struct student *temp;
+    temp=head;
+    fflush(stdin);
+    printf("\n\t****************************************************");
+    printf("\n\tEnter the Admission No. of student : ");
+    gets(ad);
+    printf("\n\t****************************************************");
+    while(temp!=NULL){
+        if(comp(temp->adm_no,ad)){
+            if(temp->fee > 0.00){
+                printf("\n\n\tFee is Not submited.....");
+                return 1;
+            }
+            else{
+                printf("\n\n\tFee is submited......");
+                return 1;
+            }
+        }
+        temp=temp->next;
+    }
+    return 0;
+}
+
+int teacher_login(){
+    struct teacher *temp;
+    temp=start;
+    char pass[10];
+    char name[20];
+    fflush(stdin);
+    printf("\n\n\tEnter your First name: ");
+    gets(name);
+
+    while(temp != NULL){
+        if(comp(temp->teacher_first_name,name)){
+            fflush(stdin);
+            printf("\n\tEnter your password:-- ");
+            gets(pass);
+            if(comp(temp->teacher_id,pass)){
+                return 1;
+            }
+            else{
+                printf("\n\tPassword does not match: ");
+                return 0;
+            }
+        }
+        temp=temp->next;
+    }
+    printf("\n\t%s name of teacher is not in our data base",name);
+    getch();
+    return 0;
+}
+
+void teacher(){
+    char choice;
+    while(1){
+    system("cls");
+    printf("\n\n\t**********************************");
+    printf("\n\t0. press 0 for exit");
+    printf("\n\t1. View Teacher details");
+    printf("\n\t2. View Student details");
+    printf("\n\t3. Update students marks");
+    printf("\n\t4. view Student list class wise");
+    printf("\n\t5. View salary status");
+
+    printf("\n\n\t**********************************");
+    printf("\n\tEnter your choice ---- ");
+    scanf("%d",&choice);
+    printf("\n\n\t**********************************");
+    if(choice=='0'){
+        break;
+    }
+    switch(choice)
+    {
+    case '1':
+        system("cls");
+        if(view_teachers_data()){
+            break;
+        }
+        else{
+            printf("\nTeacher data not found Wrong ID\n");
+            break;
+        }
+
+    case '2':
+        system("cls");
+            if(view_students_data()){
+                break;
+            }
+            else{
+                printf("\n\tStudent not fount Wrong admission NO. ");
+                printf("\n\tPress any key to continue --  ");
+            }
+            getch();
+            break;
+    case '3':
+        system("cls");
+        update_students_marks();
+        getch();
+        break;
+    case '4':
+        system("cls");
+        class_wise_student_list();
+        getch();
+        break;
+    case '5':
+        system("cls");
+        if(view_salary_status()){
+            getch();
+            break;
+        }else{
+            printf("\n\tTeacher data not found in our database");
+            printf("\n\tPress any key to continue");
+        }
+        getch();
+        break;
+
+    default:
+        printf("\n\n\t**********************************");
+        printf("\n\n\tWrong choice ----");
+        printf("\n\n\tPress any key to contunue ");
+        getch();
+        break;
+
+    }
+    }
+}
+
+int view_salary_status(){
+    char id[10];
+    struct teacher *temp;
+    temp=start;
+    fflush(stdin);
+    printf("\n\t****************************************************");
+    printf("\n\tEnter Your ID to see salary status : ");
+    gets(id);
+    printf("\n\t****************************************************");
+    while(temp!=NULL){
+        if(comp(temp->teacher_id,id)){
+            if(temp->salary > 0.00){
+                printf("\n\n\tSalary is sent to your Account.....");
+                return 1;
+            }
+            else{
+                printf("\n\n\tSalary is not sent to your Account......");
+                return 1;
+            }
+        }
+        temp=temp->next;
+    }
+    return 0;
+}
+
+void update_students_marks(){
+    struct student *temp;
+    char ad[10],ch;
+    temp=head;
+    if(temp==NULL)
+        printf("\nList is empty\n");
+    else{
+        printf("\n\t*******************************************************************");
+        printf("\n\tEnter the Admission No. of Student whose marks is to be updated : ");
+        scanf("%s",ad);
+        printf("\n\t*******************************************************************");
+        while(temp!=NULL){
+            if(comp(temp->adm_no,ad)){
+                printf("\n\t********************************************************");
+                printf("\n\tClass           : %s",temp->clas);
+                printf("\n\tStudent name    : %s",temp->student_first_name);
+                printf(" %s",temp->last_name);
+                printf("\n\tGender          : %s",temp->student_gender);
+                printf("\n\tFathers name    : %s",temp->fathers_name);
+                printf(" %s",temp->last_name);
+                printf("\n\tMothers name    : %s",temp->mothers_name);
+                printf(" %s",temp->last_name);
+                printf("\n\tAddress         : %s",temp->addr);
+                printf("\n\tPhone number    : %lld",temp->ph_no);
+                printf("\n\tAdmission No.   : %s",temp->adm_no);
+                printf("\n\tFee             : %0.2f",temp->fee);
+                printf("\n\tMarks  --");
+                printf("\n\t\tEnglish     : %d",temp->eng);
+                printf("\n\t\tHindi       : %d",temp->hin);
+                printf("\n\t\tMaths       : %d",temp->mat);
+                fflush(stdin);
+                printf("\n\t********************************************************");
+                printf("\n\n\tEnter the New Marks : ");
+                printf("\n\n\tEnter English marks : ");
+                scanf("%d",&temp->eng);
+                printf("\n\n\tEnter Hindi marks : ");
+                scanf("%d",&temp->hin);
+                printf("\n\n\tEnter Maths marks : ");
+                scanf("%d",&temp->mat);
+
+                system("cls");
+                printf("\n\t********************************************************");
+                printf("\n\tMarks are updated :-------");
+                printf("\n\t********************************************************");
+
+                break;
+            }
+            temp=temp->next;
+        }
+        Write_List_of_student_To_File();
+    }
+}
+
+int login(){
+    int password=1234,pass;
+    printf("\n\tEnter your password:-- ");
+    scanf("%d",&pass);
+    if(pass==password){
+        return 1;
+    }
+    else{
+        printf("\n\t***********************************");
+        printf("\n\tPassword in incorrect\n");
+        printf("\n\tPress enter to go in main \n");
+        printf("\n\t***********************************");
+        getch();
+        return 0;
+    }
+}
+
+void admin(){
+    char choice;
+    while(1){
+    system("cls");
+    printf("\n\t**************************************");
+    printf("\n\t1. Student");
+    printf("\n\t2. Teacher");
+    printf("\n\t3. Go back to main menu\n");
+    printf("\n\t**************************************");
+    printf("\n\t   Enter your choice:- ");
+    scanf("%c",&choice);
+    printf("\n\t**************************************");
+    if(choice == '3')
+        break;
+    switch(choice)
+    {
+    case '1':
+        student_entry();
+        break;
+    case '2':
+        teacher_entry();
+        break;
+    default:
+        printf("\nWrong choice \n");
+        printf("Enetr any key to continue\n");
+        getch();
+    }
+}}
+
+void teacher_entry(){
+
+    char choice;
+    //start=appendlistfromfile();
+    while(1){
+            system("cls");
+        printf("\n*******************************************");
+        printf("\n1. ADD Teachers Data \n");
+        printf("\n2. View Teachers Data \n");
+        printf("\n3. Delete Teachers Data \n");
+        printf("\n4. Edit Teachers Data \n");
+        printf("\n5. Update Teachers Salary\n");
+        printf("\n6. List of Teachers Data \n");
+        printf("\n7. exit \n");
+        printf("\n*******************************************");
+        printf("\n\n\t Enter your choice : ");
+
+        scanf("%c",&choice);
+
+        if(choice==7)
+            break;
+        switch(choice){
+            case '1':
+                system("cls");
+                add_teacher_data();
+                break;
+            case '2':
+                system("cls");
+                if(view_teachers_data()){
+                    break;
+                }
+                else{
+                    printf("\n\tTeacher data not in our data base wrong ID\n");
+                    break;
+                }
+
+            case '3':
+                system("cls");
+                if(delete_teachers_data()){
+                    printf("\n\t***********************************************");
+                    printf("\n\n\tTeacher data is Deleted\n");
+                    printf("\n\t***********************************************");
+                }
+                else{
+                    printf("\n\t***********************************************");
+                    printf("\n\n\tTeacher data not found in list\n");
+                    printf("\n\t***********************************************");
+                }
+                 WriteListToFile();
+                getch();
+                break;
+            case '4':
+                system("cls");
+                edit_teachers_data();
+                getch();
+                break;
+            case '5':
+                system("cls");
+                update_salary();
+                getch();
+                break;
+            case '6':
+                system("cls");
+                list_of_teachers();
+                getch();
+                break;
+
+            default:
+                printf("\nWrong choice\n");
+
+
+        }
+
+    }
+}
+struct teacher* createnode(){
+    struct teacher *n;
+    n=(struct teacher *)malloc(sizeof(struct teacher));
+    return n;
+}
+void add_teacher_data(){
+
+    char ch;
+    struct teacher *temp,*t;
+
+    while(1){
+            system("cls");
+            fflush(stdin);
+            temp=createnode();
+            printf("\n\t***********************************************");
+            printf("\n\tEnter Teacher First name: ");
+            gets(temp->teacher_first_name);
+            fflush(stdin);
+            printf("\n\tEnter Last name: ");
+            gets(temp->last_name);
+            fflush(stdin);
+            printf("\n\tEnter Teacher ID: ");
+            gets(temp->teacher_id);
+            fflush(stdin);
+            printf("\n\tEnter subject which teacher Teaches: ");
+            gets(temp->subject_teaches);
+            fflush(stdin);
+            printf("\n\tEnter teachers Phone number: ");
+            scanf("%lld",&temp->ph_no);
+            fflush(stdin);
+            printf("\n\tEnter teachers Gender : ");
+            gets(temp->gender);
+            fflush(stdin);
+            printf("\n\tEnter teachers salary : ");
+            scanf("%f",&temp->salary);
+            temp->next=NULL;
+            if(start == NULL)
+                start=temp;
+            else{
+                t=start;
+                while(t->next != NULL){
+                    t=t->next;
+                }
+                t->next=temp;
+            }
+            fflush(stdin);
+            system("cls");
+            printf("\n\t***********************************************************************");
+            printf("\n\t\tTeachers Data is added ------------");
+            printf("\n\t***********************************************************************");
+            printf("\n\t\tEnter any key to add another teacher data ****OR**** ESC to exit");
+            printf("\n\t***********************************************************************");
+            ch=getche();
+
+            if(ch==27)
+                break;
+    }
+    WriteListToFile();
+    //fclose(fp);
+}
+
+void  WriteListToFile()
+{
+    FILE *fp;
+    fp=fopen("C:/Users/joshi/Desktop/C_language/school_management_system/teachers/teacher_data.txt","w+");
+
+    struct teacher *r;
+    r=start;
+
+    if(r==NULL)
+    {
+        return;
+    }
+    while(r!=NULL)
+    {
+        fprintf(fp,"%s ",r->teacher_first_name);
+        fprintf(fp,"%s ",r->last_name);
+        fprintf(fp,"%s ",r->teacher_id);
+        fprintf(fp,"%s ",r->subject_teaches);
+        fprintf(fp,"%lld ",r->ph_no);
+        fprintf(fp,"%s ",r->gender);
+        fprintf(fp,"%0.2f",r->salary);
+        fprintf(fp, "\n");
+        r=r->next;
+    }
+    fclose(fp);
+}
+
+struct teacher* appendlistfromfile(){
+    struct teacher *temp,*t;
+    FILE *fp;
+    temp=start;
+    fp=fopen("C:/Users/joshi/Desktop/C_language/school_management_system/teachers/teacher_data.txt","r+");
+    if(fp==NULL){
+        printf("Error opening file");
+        return start;
+    }
+    while(!feof(fp)){
+
+        temp=createnode();
+        fscanf(fp,"%s %s %s %s %lld %s %f\n",temp->teacher_first_name,temp->last_name,temp->teacher_id,temp->subject_teaches,&temp->ph_no,temp->gender,&temp->salary);
+
+        temp->next=NULL;
+        if(start == NULL)
+            start=temp;
+        else{
+            t=start;
+            while(t->next != NULL){
+                t=t->next;
+                }
+                t->next=temp;
+            }
+    }
+    return start;
+}
+
+int view_teachers_data(){
+    struct teacher *temp;
+    temp=start;
+    char id[10];
+
+    fflush(stdin);
+    printf("\n\t*************************************************");
+    fflush(stdin);
+    printf("\n\t\tEnter the ID of the teacher : ");
+    gets(id);
+    printf("\n\t*************************************************");
+    while(temp != NULL){
+        if((comp(temp->teacher_id,id))==1){
+            printf("\n\t***********************************************");
+            printf("\n\tTeacher name : %s",temp->teacher_first_name);
+            printf(" %s",temp->last_name);
+            printf("\n\tTeacher ID : %s",temp->teacher_id);
+            printf("\n\tSubject teaches : %s",temp->subject_teaches);
+            printf("\n\tPhone number : %lld",temp->ph_no);
+            printf("\n\tGender : %s",temp->gender);
+            printf("\n\tSalary : %0.2f",temp->salary);
+            printf("\n");
+            printf("\n\t***********************************************");
+            printf("\n\tPress any key to continue : ");
+            getch();
+            return 1;
+        }
+        temp=temp->next;
+    }
+    return 0;
+}
+
+int delete_teachers_data(){
+    struct teacher *temp,*prev;
+    char id[10];
+    temp=start;
+    if(temp==NULL){
+        printf("\n\n\t***********************************************");
+        printf("\n\n\t\tList is empty\n");
+        printf("\n\n\t***********************************************");
+    }
+    else{
+            printf("\n\t*************************************************************");
+            printf("\n\tEnter the ID of Teacher whose data is to be deleted : ");
+            scanf("%s",id);
+            printf("\n\t*************************************************************");
+            fflush(stdin);
+            while(temp!=NULL){
+                if(comp(temp->teacher_id,id)){
+                    if(temp==start){
+                        start=temp->next;
+                        free(temp);
+                        return 1;
+                    }
+                    else{
+                        prev->next=temp->next;
+                        free(temp);
+                        return 1;
+                    }
+                }
+                else{
+                    prev=temp;
+                    temp=temp->next;
+                }
+            }
+      return 0;
+    }
+}
+
+void edit_teachers_data(){
+    struct teacher *temp;
+    char id[10],ch;
+    temp=start;
+    if(temp==NULL){
+        printf("\n\t***********************************************");
+        printf("\n\tList is empty\n");
+        printf("\n\t***********************************************");
+        }
+        else{
+        printf("\n\t**********************************************************");
+        printf("\n\tEnter the ID of teacher whose Data is to be updated : ");
+        scanf("%s",id);
+        printf("\n\t**********************************************************");
+        while(temp!=NULL){
+            if(comp(temp->teacher_id,id)){
+                printf("\n\tID : %s",temp->teacher_id);
+                printf("\n\tName : %s",temp->teacher_first_name);
+                printf(" %s",temp->last_name);
+                printf("\n\tSubject : %s",temp->subject_teaches);
+                printf("\n\tPhone No. : %lld",temp->ph_no);
+                printf("\n\tGender : %s",temp->gender);
+                printf("\n\t***********************************************");
+                fflush(stdin);
+                printf("\n\n\tEnter the updated data : ");
+                printf("\n\t***********************************************");
+                printf("\n\n\tEnter ID : ");
+                gets(temp->teacher_id);
+                fflush(stdin);
+                printf("\n\tEnter First NAME : ");
+                gets(temp->teacher_first_name);
+                fflush(stdin);
+                printf("\n\tEnter Last name : ");
+                gets(temp->last_name);
+                fflush(stdin);
+                printf("\n\tEnter  SUBJECT Teaches : ");
+                gets(temp->subject_teaches);
+                fflush(stdin);
+                printf("\n\tEnter Phone No. : ");
+                scanf("%lld",&temp->ph_no);
+                fflush(stdin);
+                printf("\n\tEnter Gender : ");
+                gets(temp->gender);
+                system("cls");
+                printf("\n\t**********************************************************");
+                printf("\n\n\t\tData is updated :-------");
+                printf("\n\t**********************************************************");
+
+                break;
+            }
+            temp=temp->next;
+        }
+        WriteListToFile();
+    }
+}
+
+
+void list_of_teachers(){
+    struct teacher *temp;
+    if(start==NULL){
+        printf("\nList is empty :---------\n");
+        return;
+    }
+    else{
+        temp=start;
+        int i=0;
+        while(temp != NULL){++i;
+            printf("\n\t*****************************************\n");
+            printf("\t%d.)",i);
+            printf("\n\t  Teacher name : %s",temp->teacher_first_name);
+            printf(" %s",temp->last_name);
+            printf("\n\t  Teacher ID : %s",temp->teacher_id);
+            printf("\n\t  Subject teaches : %s",temp->subject_teaches);
+            printf("\n\t  Phone number : %lld",temp->ph_no);
+            printf("\n\t  Gender : %s",temp->gender);
+            printf("\n\t  Salary : %0.2f",temp->salary);
+            printf("\n");
+            printf("\n\t*****************************************\n");
+            temp=temp->next;
+        }
+
+    }
+}
+
+void update_salary(){
+    struct teacher *temp;
+    char id[10],ch;
+    temp=start;
+    if(temp==NULL)
+        printf("\nList is empty\n");
+    else{
+        printf("\n\t****************************************************************");
+        printf("\n\tEnter the ID of teacher whose salary is to be updated : ");
+        scanf("%s",id);
+        printf("\n\t****************************************************************");
+        while(temp!=NULL){
+            if(comp(temp->teacher_id,id)){
+                printf("\n\t********************************************************");
+                printf("\n\tID : %s",temp->teacher_id);
+                printf("\n\tName : %s",temp->teacher_first_name);
+                printf(" %s",temp->last_name);
+                printf("\n\tSubject : %s",temp->subject_teaches);
+                printf("\n\tPhone No. : %lld",temp->ph_no);
+                printf("\n\tGender : %s",temp->gender);
+                printf("\n\tSalary : %0.2f",temp->salary);
+                fflush(stdin);
+                printf("\n\t********************************************************");
+                printf("\n\n\tEnter the New salary : ");
+                scanf("%f",&temp->salary);
+
+                system("cls");
+                 printf("\n\t********************************************************");
+                printf("\n\tSalary is updated :-------");
+                 printf("\n\t********************************************************");
+
+                break;
+            }
+            temp=temp->next;
+        }
+        WriteListToFile();
+    }
+}
+
+void student_entry(){
+
+    char choice;
+        while(1){
+            system("cls");
+        printf("\n*******************************************");
+        printf("\n1. ADD Students Data \n");
+        printf("\n2. View Students Data \n");
+        printf("\n3. Delete Students Data \n");
+        printf("\n4. Edit Students Data \n");
+        printf("\n5. Update Students Fee\n");
+        printf("\n6. List of Students Data \n");
+        printf("\n7. List of students class wise\n");
+        printf("\n8. exit \n");
+        printf("\n*******************************************");
+        printf("\n\n\t Enter your choice : ");
+
+        scanf("%c",&choice);
+
+        if(choice=='8')
+            break;
+        switch(choice){
+            case '1':
+                system("cls");
+                add_students_data();
+                break;
+            case '2':
+                system("cls");
+                if(view_students_data()){
+                   break;
+                }
+                else{
+                  printf("\n\tStudent not fount Wrong admission NO. ");
+                  printf("\n\tPress any key to continue --  ");
+                }
+                getch();
+                break;
+            case '3':
+                system("cls");
+                if(delete_students_data()){
+                    printf("\n\t***********************************************");
+                    printf("\n\n\tStudent data is Deleted\n");
+                    printf("\n\t***********************************************");
+                }
+                else{
+                    printf("\n\t***********************************************");
+                    printf("\n\n\tStudent data not found in Record\n");
+                    printf("\n\t***********************************************");
+                }
+                 Write_List_of_student_To_File();
+                getch();
+                break;
+            case '4':
+                system("cls");
+                edit_students_data();
+                getch();
+                break;
+            case '5':
+                system("cls");
+                update_fee();
+                getch();
+                break;
+            case '6':
+                system("cls");
+                list_of_students();
+                getch();
+                break;
+            case '7':
+                system("cls");
+                class_wise_student_list();
+                getch();
+                break;
+
+            default:
+                printf("\nWrong choice\n");
+
+
+        }
+
+    }
+}
+struct student* screatenode(){
+    struct student *n;
+    n=(struct student *)malloc(sizeof(struct student));
+    return n;
+}
+void add_students_data(){
+
+    char ch;
+    struct student *temp,*t;
+
+    while(1){
+            system("cls");
+            fflush(stdin);
+            temp=screatenode();
+            printf("\n\t***********************************************");
+            printf("\n\tClass available 1st, 2nd, 3rd .\n");
+            printf("\n\t***********************************************");
+            printf("\n\tEnter Student First name: ");
+            gets(temp->student_first_name);
+            fflush(stdin);
+            printf("\n\tEnter Last name: ");
+            gets(temp->last_name);
+            fflush(stdin);
+            printf("\n\tEnter Student Gender: ");
+            gets(temp->student_gender);
+            fflush(stdin);
+            printf("\n\tEnter class: ");
+            gets(temp->clas);
+            printf("\n\tEnter Fathers First name: ");
+            gets(temp->fathers_name);
+            fflush(stdin);
+            printf("\n\tEnter Mothers First name: ");
+            gets(temp->mothers_name);
+            fflush(stdin);
+            printf("\n\tEnter Student Phone number: ");
+            scanf("%lld",&temp->ph_no);
+            fflush(stdin);
+            printf("\n\tEnter Admission No.: ");
+            gets(temp->adm_no);
+            fflush(stdin);
+            printf("\n\tEnter Student Fee : ");
+            scanf("%f",&temp->fee);
+            fflush(stdin);
+            printf("\n\tEnter English Mark: ");
+            scanf("%d",&temp->eng);
+            printf("\n\tEnter Hindi Mark: ");
+            scanf("%d",&temp->hin);
+            printf("\n\tEnter Maths Mark: ");
+            scanf("%d",&temp->mat);
+            fflush(stdin);
+            printf("\n\tEnter the Address of Student: ");
+            scanf("%[^\n]",temp->addr);
+            temp->next=NULL;
+            if(head == NULL)
+                head=temp;
+            else{
+                t=head;
+                while(t->next != NULL){
+                    t=t->next;
+                }
+                t->next=temp;
+            }
+            fflush(stdin);
+            system("cls");
+            printf("\n\t***********************************************************************");
+            printf("\n\t\tStudent Data is added ------------");
+            printf("\n\t***********************************************************************");
+            printf("\n\t\tEnter any key to add another Student data ****OR**** ESC to exit");
+            printf("\n\t***********************************************************************");
+            ch=getche();
+
+            if(ch==27)
+                break;
+    }
+    Write_List_of_student_To_File();
+    //fclose(fp);
+}
+
+void  Write_List_of_student_To_File()
+{
+    FILE *fp;
+    fp=fopen("C:/Users/joshi/Desktop/C_language/school_management_system/students/student_data.txt","w+");
+
+
+    struct student *r;
+    r=head;
+
+
+    if(r==NULL)
+    {
+        return;
+    }
+    while(r!=NULL)
+    {
+        fprintf(fp,"%s ",r->student_first_name);
+        fprintf(fp,"%s ",r->last_name);
+        fprintf(fp,"%s ",r->student_gender);
+        fprintf(fp,"%s ",r->clas);
+        fprintf(fp,"%s ",r->fathers_name);
+        fprintf(fp,"%s ",r->mothers_name);
+        fprintf(fp,"%lld ",r->ph_no);
+        fprintf(fp,"%s ",r->adm_no);
+        fprintf(fp,"%0.2f ",r->fee);
+        fprintf(fp,"%d ",r->eng);
+        fprintf(fp,"%d ",r->hin);
+        fprintf(fp,"%d ",r->mat);
+        fprintf(fp, "\n");
+        fprintf(fp,"%s",r->addr);
+        fprintf(fp, "\n");
+        r=r->next;
+    }
+    fclose(fp);
+}
+
+struct student* append_student_list_from_file(){
+    struct student *temp,*t;
+    FILE *fp;
+    temp=head;
+    fp=fopen("C:/Users/joshi/Desktop/C_language/school_management_system/students/student_data.txt","r+");
+    if(fp==NULL){
+        printf("Error opening file");
+        return head;
+    }
+    while(!feof(fp)){
+
+        temp=screatenode();
+        fscanf(fp,"%s %s %s %s %s %s %lld %s %f %d %d %d\n%[^\n]%*c\n",temp->student_first_name,temp->last_name,temp->student_gender,temp->clas,temp->fathers_name,temp->mothers_name,&temp->ph_no,temp->adm_no,&temp->fee,&temp->eng,&temp->hin,&temp->mat,temp->addr);
+
+        temp->next=NULL;
+        if(head == NULL)
+            head=temp;
+        else{
+            t=head;
+            while(t->next != NULL){
+                t=t->next;
+                }
+                t->next=temp;
+            }
+    }
+    return head;
+}
+
+int view_students_data(){
+    struct student *temp;
+    temp=head;
+    char ad[10];
+
+    fflush(stdin);
+    printf("\n\t*************************************************");
+    printf("\n\t\tEnter the Admission NO. of Student : ");
+    gets(ad);
+    printf("\n\t*************************************************");
+    while(temp != NULL){
+        if((comp(temp->adm_no,ad))==1){
+            printf("\n\t***********************************************");
+            printf("\n\tClass           : %s",temp->clas);
+            printf("\n\tStudent name    : %s",temp->student_first_name);
+            printf(" %s",temp->last_name);
+            printf("\n\tGender          : %s",temp->student_gender);
+            printf("\n\tFathers name    : %s",temp->fathers_name);
+            printf(" %s",temp->last_name);
+            printf("\n\tMothers name    : %s",temp->mothers_name);
+            printf(" %s",temp->last_name);
+            printf("\n\tAddress         : %s",temp->addr);
+            printf("\n\tPhone number    : %lld",temp->ph_no);
+            printf("\n\tAdmission No.   : %s",temp->adm_no);
+            printf("\n\tFee             : %0.2f",temp->fee);
+            printf("\n\tMarks  --");
+            printf("\n\t\tEnglish     : %d",temp->eng);
+            printf("\n\t\tHindi       : %d",temp->hin);
+            printf("\n\t\tMaths       : %d",temp->mat);
+            printf("\n");
+            printf("\n\t***********************************************");
+            printf("\n\tPress any key to continue : ");
+            getch();
+            return 1;
+        }
+        temp=temp->next;
+    }
+    return 0;
+}
+
+int delete_students_data(){
+    struct student *temp,*prev;
+    char ad[10];
+    temp=head;
+    if(temp==NULL){
+        printf("\n\n\t***********************************************");
+        printf("\n\n\t\tList is empty\n");
+        printf("\n\n\t***********************************************");
+    }
+    else{
+            printf("\n\t*************************************************************");
+            printf("\n\tEnter the Admission No. of Student whose data is to be deleted : ");
+            scanf("%s",ad);
+            printf("\n\t*************************************************************");
+            fflush(stdin);
+            while(temp!=NULL){
+                if(comp(temp->adm_no,ad)){
+                    if(temp==head){
+                        head=temp->next;
+                        free(temp);
+                        return 1;
+                    }
+                    else{
+                        prev->next=temp->next;
+                        free(temp);
+                        return 1;
+                    }
+                }
+                else{
+                    prev=temp;
+                    temp=temp->next;
+                }
+            }
+      return 0;
+    }
+}
+
+void edit_students_data(){
+    struct student *temp;
+    char ad[10],ch;
+    temp=head;
+    if(temp==NULL){
+        printf("\n\t***********************************************");
+        printf("\n\tList is empty\n");
+        printf("\n\t***********************************************");
+        }
+        else{
+        printf("\n\t********************************************************************");
+        printf("\n\tEnter the Admission No. of Student whose Data is to be updated : ");
+        scanf("%s",ad);
+        printf("\n\t********************************************************************");
+        while(temp!=NULL){
+            if(comp(temp->adm_no,ad)){
+               printf("\n\tClass           : %s",temp->clas);
+               printf("\n\tStudent name    : %s",temp->student_first_name);
+               printf(" %s",temp->last_name);
+               printf("\n\tGender          : %s",temp->student_gender);
+               printf("\n\tFathers name    : %s",temp->fathers_name);
+               printf(" %s",temp->last_name);
+               printf("\n\tMothers name    : %s",temp->mothers_name);
+               printf(" %s",temp->last_name);
+               printf("\n\tAddress         : %s",temp->addr);
+               printf("\n\tPhone number    : %lld",temp->ph_no);
+               printf("\n\tAdmission No.   : %s",temp->adm_no);
+               printf("\n\tFee             : %0.2f",temp->fee);
+               printf("\n\tMarks  --");
+               printf("\n\t\tEnglish       : %d",temp->eng);
+               printf("\n\t\tHindi       : %d",temp->hin);
+               printf("\n\t\tMaths       : %d",temp->mat);
+                printf("\n\t***********************************************");
+                fflush(stdin);
+                printf("\n\n\tEnter the updated data : ");
+                printf("\n\t***********************************************");
+                printf("\n\n\tEnter Student Name : ");
+                gets(temp->student_first_name);
+                fflush(stdin);
+                printf("\n\tEnter last Lame : ");
+                gets(temp->last_name);
+                fflush(stdin);
+                printf("\n\tEnter Gender : ");
+                gets(temp->student_gender);
+                fflush(stdin);
+                printf("\n\tEnter Class : ");
+                gets(temp->clas);
+                fflush(stdin);
+                printf("\n\tEnter Fathers Name : ");
+                gets(temp->fathers_name);
+                fflush(stdin);
+                printf("\n\tEnter Mothers Name : ");
+                gets(temp->mothers_name);
+                fflush(stdin);
+                printf("\n\tEnter Address : ");
+                scanf("%[^\n]",temp->addr);
+                fflush(stdin);
+                printf("\n\tEnter Phone No. : ");
+                scanf("%lld",&temp->ph_no);
+                fflush(stdin);
+                printf("\n\t**********************************************************");
+                printf("\n\n\t\tData is updated :-------");
+                printf("\n\t**********************************************************");
+
+                break;
+            }
+            temp=temp->next;
+        }
+        Write_List_of_student_To_File();
+    }
+}
+
+
+void list_of_students(){
+    struct student *temp;
+
+    if(head==NULL){
+        printf("\nList is empty :---------\n");
+        return;
+    }
+    else{
+        temp=head;
+        int i=0;
+        while(temp != NULL){
+            ++i;
+            printf("\n\t*****************************************\n");
+            printf("\t%d.)",i);
+            printf("\n\tStudent name : %s",temp->student_first_name);
+            printf(" %s",temp->last_name);
+            printf("\n\tAdmission No. : %s",temp->adm_no);
+            printf("\n\tGender : %s",temp->student_gender);
+            printf("\n\tPhone number : %lld",temp->ph_no);
+            printf("\n\tAddress : %s",temp->addr);
+
+            printf("\n");
+            printf("\n\t*****************************************\n");
+            temp=temp->next;
+        }
+
+    }
+}
+
+void update_fee(){
+    struct student *temp;
+    char ad[10],ch;
+    temp=head;
+    if(temp==NULL)
+        printf("\nList is empty\n");
+    else{
+        printf("\n\t*******************************************************************");
+        printf("\n\tEnter the Admission No. of Student whose Fee is to be updated : ");
+        scanf("%s",ad);
+        printf("\n\t*******************************************************************");
+        while(temp!=NULL){
+            if(comp(temp->adm_no,ad)){
+                printf("\n\t********************************************************");
+                printf("\n\tClass           : %s",temp->clas);
+                printf("\n\tStudent name    : %s",temp->student_first_name);
+                printf(" %s",temp->last_name);
+                printf("\n\tGender          : %s",temp->student_gender);
+                printf("\n\tFathers name    : %s",temp->fathers_name);
+                printf(" %s",temp->last_name);
+                printf("\n\tMothers name    : %s",temp->mothers_name);
+                printf(" %s",temp->last_name);
+                printf("\n\tAddress         : %s",temp->addr);
+                printf("\n\tPhone number    : %lld",temp->ph_no);
+                printf("\n\tAdmission No.   : %s",temp->adm_no);
+                printf("\n\tFee             : %0.2f",temp->fee);
+                printf("\n\tMarks  --");
+                printf("\n\t\tEnglish     : %d",temp->eng);
+                printf("\n\t\tHindi       : %d",temp->hin);
+                printf("\n\t\tMaths       : %d",temp->mat);
+                fflush(stdin);
+                printf("\n\t********************************************************");
+                printf("\n\n\tEnter the New Fee : ");
+                scanf("%f",&temp->fee);
+
+                system("cls");
+                printf("\n\t********************************************************");
+                printf("\n\tFee is updated :-------");
+                printf("\n\t********************************************************");
+
+                break;
+            }
+            temp=temp->next;
+        }
+        Write_List_of_student_To_File();
+    }
+}
+
+void class_wise_student_list(){
+
+    class_1();
+    class_2();
+    class_3();
+    printf("\n*****************************************************************");
+    printf("\n\tEnter any Key to continue");
+}
+
+void class_1(){
+    struct student *temp;
+    temp=head;
+    int i=0;
+    printf("\n*****************************************************************");
+    printf("\n\tClass 1 Students\n");
+    printf("\n\t     Name\t\tAdmission_No.\tGender\tPhone_No.\n");
+    while(temp != NULL){
+        if(comp(temp->clas,"1st")){
+            i++;
+            printf("\t%d.) %s %s \t%s  \t\t%s \t%lld\n",i,temp->student_first_name,temp->last_name,temp->adm_no,temp->student_gender,temp->ph_no);
+        }
+        temp=temp->next;
+        }
+        if(i==0){
+            printf("\n\tNo student in 1st Class.");
+        }
+}
+void class_2(){
+    struct student *temp;
+    temp=head;
+    int i=0;
+    printf("\n*****************************************************************");
+    printf("\n\tClass 2 Students\n");
+    printf("\n\t     Name\t\tAdmission_No.\tGender\tPhone_No.\n");
+    while(temp != NULL){
+        if(comp(temp->clas,"2nd")){
+            i++;
+            printf("\t%d.) %s %s \t%s  \t\t%s \t%lld\n",i,temp->student_first_name,temp->last_name,temp->adm_no,temp->student_gender,temp->ph_no);
+        }
+        temp=temp->next;
+    }
+    if(i==0){
+            printf("\n\tNo student in 2nd Class.");
+        }
+}
+void class_3(){
+    struct student *temp;
+    temp=head;
+    int i=0;
+    printf("\n*****************************************************************");
+    printf("\n\tClass 3 Students\n");
+    printf("\n\t     Name\t\tAdmission_No.\tGender\tPhone_No.\n");
+    while(temp != NULL){
+        if(comp(temp->clas,"3rd")){
+            i++;
+            printf("\t%d.) %s %s \t%s  \t\t%s \t%lld\n",i,temp->student_first_name,temp->last_name,temp->adm_no,temp->student_gender,temp->ph_no);
+        }
+        temp=temp->next;
+    }
+    if(i==0){
+            printf("\n\tNo student in 3rd Class.\n");
+        }
+}
+
