@@ -1,4 +1,3 @@
-//#include "Check_Input.c"
 #include "concat.c"
 #include<stdio.h>
 #include<windows.h>
@@ -6,10 +5,8 @@
 #include<dirent.h>
 #include<string.h>
 #define PATH "C:/Users/Utkarsh Verma/Desktop/Projects/"
-//#include"login.c"
 #include"adminTeacher.c"
 #include"reset_password.c"
-//#define FEES 150000.0
 
 struct student
 {
@@ -93,6 +90,7 @@ void admin_Student()
         printf("5. View Student Details        :\n");
         printf("6. List Students               :\n");
         printf("7. List Students(Fees Pending) :\n");
+        printf("8. Change Fees Status          :\n");
         printf("0. Exit                        :\n");
         ch = getchar();
         fflush(stdin);
@@ -156,6 +154,14 @@ void admin_Student()
             system("cls");
             fflush(stdin);
         break;
+
+        case '8' :
+            system("cls");
+            update_Student_Details(3);
+            system("cls");
+            fflush(stdin);
+        break;
+
         default :
             system("cls");
             printf("Invalid Choice!\n");
@@ -284,8 +290,6 @@ void write_to_file(struct student st,char roll[11])
     concat(path_name,path_name,".txt");
     FILE *fptr=fopen(path_name,"w");
 //    fwrite(&st, sizeof(struct student), 1, fptr);
-
-
     fprintf(fptr,"%s\n",st.name[0]);
     fprintf(fptr,"%s\n",st.name[1]);
     fprintf(fptr,"%s\n",st.name[2]);
@@ -430,12 +434,6 @@ void update_Student_Details(int found)
         r_no=check_number(roll);
         if(r_no == 0)
         {
-            if(found == 1)
-            {
-                printf("Coming through found.\n");
-                getch();
-            }
-
             printf("Invalid Input!\n");
             continue;
         }
@@ -470,16 +468,21 @@ void update_Student_Details(int found)
                     if(found == 1)
                     {
                         found = 2;
-                        ch = '5';
+                        ch = '4';
                         goto f;
                     }
                     if(found == 2)
                         return;
+                    if(found == 3)
+                    {
+                        found = 2;
+                        ch = '5';
+                        goto f;
+                    }
                     printf("Press 1 to change Name :\n");
                     printf("Press 2 to change Address       :\n");
                     printf("Press 3 to change Contact No.   :\n");
-                    printf("Press 4 to change Fees Paid     :\n");
-                    printf("Press 5 to change Marks         :\n");
+                    printf("Press 4 to change Marks         :\n");
                     printf("Press 0 to exit                 :\n");
                     fflush(stdin);
                     ch=getchar();
@@ -525,6 +528,12 @@ void update_Student_Details(int found)
                     break;
 
                     case '4' :
+                            change_Marks();
+                            if(found == 2)
+                                write_to_file(st,roll);
+                    break;
+
+                    case '5' :
                         system("cls");
                         char fee[10];
                         printf("Enter fees paid till date : ");
@@ -537,16 +546,12 @@ void update_Student_Details(int found)
                         }
 
                         st.fees=f;
+                        if(found == 2)
+                            write_to_file(st,roll);
                         printf("Total amount paid is now changed to %.2f.\n",st.fees);
                         printf("Press any key to exit : ");
                         getch();
                         system("cls");
-                    break;
-
-                    case '5' :
-                            change_Marks();
-                            if(found == 2)
-                                write_to_file(st,roll);
                     break;
 
                     default :
@@ -876,15 +881,8 @@ void display_by_fees()
             if(st.fees < FEES)
                 printf("%-10u%-15s%-15d%-15.2lf%-15.2lf\n",st.roll_no,st.name[0],i,st.fees,FEES-st.fees);
         }
-        if(count==3)
-        {
-            printf("NO student therfore continuing.\n");
-            continue;
-        }
         closedir(dirptr);
     }
     if(flag == 0)
         printf("All the students have submitted their fees.\n");
-
 }
-
