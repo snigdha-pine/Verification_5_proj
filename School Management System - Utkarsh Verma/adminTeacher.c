@@ -19,8 +19,8 @@ void List_Teachers(struct teacher *);
 void write_to_master(struct teacher *);
 struct teacher* get_from_master();
 void view_teachers_details();
-void modify_teacher_details();
-void change_Details(char* ,struct teacher **);
+void modify_teacher_details(int );
+void change_Details(char* ,struct teacher **,int);
 void list_salary_pending();
 void update_Student_Details(int);
 void delete_teacher_record(struct teacher *);
@@ -40,6 +40,7 @@ void admin_Teacher()
         printf("4. Edit Teacher Details :\n");
         printf("5. List All Teachers :\n");
         printf("6. List Teachers(Salary Pending) :\n");
+        printf("7. Change Salary Status :\n");
         printf("0. Exit :\n");
         fflush(stdin);
         ch=getchar();
@@ -92,7 +93,7 @@ void admin_Teacher()
                     getch();
                     break;
                 }
-                modify_teacher_details();
+                modify_teacher_details(0);
             break;
 
             case '5' :
@@ -118,6 +119,18 @@ void admin_Teacher()
                 }
                 list_salary_pending();
             break;
+
+            case '7' :
+                system("cls");
+                if(start == NULL)
+                {
+                    printf("No Teacher Found.\n");
+                    printf("Press any key to exit.\n");
+                    getch();
+                    break;
+                }
+                modify_teacher_details(1);
+                break;
 
             default :
                 system("cls");
@@ -378,8 +391,8 @@ void view_teachers_details()
 }
 
 
-void modify_teacher_details()
-{
+void modify_teacher_details(int mode)                                           // If mode is 0 change details other than salary
+{                                                                               // If mode is 1 change salary
     char t_id[10],f_nam[50];
     enter_id : printf("Enter ID : ");
     scanf("%s",t_id);
@@ -405,7 +418,7 @@ void modify_teacher_details()
         {
             if(strcmp(t_id,temp->id)==0)
             {
-                change_Details(f_nam,&temp);
+                change_Details(f_nam,&temp,mode);
                 fclose(fptr);
                 break;
             }
@@ -414,7 +427,7 @@ void modify_teacher_details()
     }
 }
 
-void change_Details(char f_nam[50], struct teacher **temp)
+void change_Details(char f_nam[50], struct teacher **temp,int mode)
 {
     system("cls");
     char ch;
@@ -422,11 +435,15 @@ void change_Details(char f_nam[50], struct teacher **temp)
     {
         printf("%-10s %-15s %-15s %-15s %-15s %-15s\n\n","ID","NAME","SUBJECT","NUMBER","SALARY","SALARY PAID");
         printf("%-10s %-15s %-15s %-15lld %-15.2lf %-15.2lf\n\n",(*temp)->id,(*temp)->name,(*temp)->sub,(*temp)->contact_no,(*temp)->salary,(*temp)->salary_paid);
+        if(mode == 1|| mode ==2)
+        {
+            if(mode == 2)
+                break;
+            goto enter_sp;
+        }
         printf("1. Change Name :\n");
         printf("2. Change Subject :\n");
         printf("3. Contact Number :\n");
-        printf("4. Change Salary :\n");
-        printf("5. Change Salary Paid :\n");
         printf("0. Exit :\n");
         fflush(stdin);
         ch = getchar();
@@ -440,12 +457,18 @@ void change_Details(char f_nam[50], struct teacher **temp)
         case '1' :
             printf("Enter new name : ");
             scanf("%[^\n]%*c",(*temp)->name);
+            printf("Name Changed.\n");
+            printf("Press any key to exit.");
+            getch();
             system("cls");
         break;
 
         case '2' :
             printf("Enter new Subject : ");
             scanf("%[^\n]%*c",(*temp)->sub);
+            printf("Subject Changed.\n");
+            printf("Press any key to exit.");
+            getch();
             system("cls");
         break;
 
@@ -460,38 +483,36 @@ void change_Details(char f_nam[50], struct teacher **temp)
                 goto enter_no;
             }
             else
+            {
                 (*temp)->contact_no=no;
+                printf("Contact Number Changed.\n");
+                printf("Press any key to exit.");
+                getch();
+            }
+
             system("cls");
         break;
 
         case '4' :
-            enter_s : printf("Enter new Salary : ");
-            char s[9];
-            scanf("%s",s);
-            double sal=check_fees(s);
-            if(sal == 0)
-            {
-                system("cls");
-                printf("Invalid Input!\n");
-                goto enter_s;
-            }
-            else
-                (*temp)->salary=sal;
-            system("cls");
-        break;
-
-        case '5' :
             enter_sp : printf("\nEnter Total Salary Paid : ");
             char sp[9];
             scanf("%s",sp);
-            sal=check_fees(sp);
+            double sal=check_fees(sp);
             if(sal == 0 || sal > (*temp)->salary)
             {
                 printf("Invalid Input!\n");
                 goto enter_sp;
             }
             else
+            {
                 (*temp)->salary_paid=sal;
+                printf("Salary status Changed.\n");
+                printf("Press any key to exit.");
+                getch();
+            }
+
+            if(mode==1)
+                mode=2;
             system("cls");
         break;
 
